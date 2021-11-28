@@ -59,3 +59,6 @@ var src_dict = {
   - Microsoft Edge 版本 96.0.1054.34 (官方内部版本) (64 位)
   - Google Chrome 版本 96.0.4664.45 (正式版本) (64 位)
   - Tampermonkey v4.13
+
+# 其他
+[GitHub Pages](https://riveryale.github.io/Userscripts/)
