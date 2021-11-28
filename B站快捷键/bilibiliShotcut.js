@@ -48,7 +48,7 @@ if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 }
 
 function danmuToggle() {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 2:
 			fireKeyEvent(document.querySelector('body'), 'keydown', 68);
@@ -67,7 +67,7 @@ function danmuToggle() {
 
 function videoScale() {
 	var video;
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -99,7 +99,7 @@ function videoScale() {
 }
 
 function fullScreenToggle() {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -120,7 +120,7 @@ function fullScreenToggle() {
 }
 
 function wideScreenToggel() {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -142,7 +142,7 @@ function wideScreenToggel() {
 }
 
 function speedAdjust(upOrDown) {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -172,7 +172,7 @@ function speedAdjust(upOrDown) {
 }
 
 function restart() {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -196,7 +196,7 @@ function restart() {
 }
 
 function livePause(e) {
-	switch(pageType){
+	switch(pageType) {
 		case 0:
 		case 1:
 		case 2:
