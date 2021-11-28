@@ -11,7 +11,7 @@
 // @run-at       document-end
 // @compatible   chrome
 // @compatible   edge
-// @license      Apache-2.0
+// @license      MIT License
 // ==/UserScript==
 
 var autoMark = true;				// 默认点击链接后自动标记为看过

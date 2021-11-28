@@ -12,7 +12,7 @@
 // @run-at       document-start
 // @compatible   chrome
 // @compatible   edge
-// @license      Apache-2.0
+// @license      MIT License
 // ==/UserScript==
 
 var onKeyDown = function (e) {
