@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi快捷播放
 // @description  首页卡片显示中文标题，浮动卡片增加对应集数播放源（需手动添加网址格式）
-// @namespace    https://github.com/RiverYale
+// @namespace    https://github.com/RiverYale/Userscripts/
 // @version      2.3
 // @author       RiverYale
 // @match        *://bangumi.tv
