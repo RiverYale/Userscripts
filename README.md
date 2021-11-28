@@ -1,5 +1,5 @@
-# Userscirpt
-油猴脚本，用于提升某些需求下的用户体验。
+# Userscirpts
+油猴脚本，用于提升某些需求下的用户体验。[GitHub Pages](https://riveryale.github.io/Userscripts/)
 
 - [B站快捷键](https://github.com/RiverYale/Userscripts/tree/main/B%E7%AB%99%E5%BF%AB%E6%8D%B7%E9%94%AE)  
   该脚本为B站视频（video）、番剧（bangumi）、直播（live）页面添加了一些快捷键，虽然B站部分页面提供一些播放的快捷键，但较分散，该脚本进行了调整并添加了新的快捷键。
