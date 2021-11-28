@@ -16,12 +16,14 @@
 <br/>
 
 # 按键修改
-用户可以根据自己需求在代码中修改按键，如下所示，修改`17`为其他值即可，[查看keyCode对照表](http://www.phpweblog.net/kiyone/archive/2007/04/19/1138.html)。
+用户可以根据自己需求在代码中修改按键，如下所示，修改`17`为其他值即可。
 ```
 if (17 == e.keyCode) {        // Ctrl 弹幕开关
 	danmuToggle();
 } 
 ```
+![keyCode对照表](keyCode.png)
+[查看数据来源](http://www.phpweblog.net/kiyone/archive/2007/04/19/1138.html)
 
 <br/>
 
