@@ -1,16 +1,16 @@
 # 脚本说明
 该脚本用于Bangumi登陆后，首页追番框中显示中文标题，浮动卡片增加对应集数播放源（需手动添加网址格式），更新剧集状态后自动更新卡片信息
 1. 首页追番框中显示中文标题，交换了鼠标悬浮时的内容和页面的内容，使得中文显示在页面上  
-  <img src="title.png" width="350">
+  <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/title.png" width="350">
 
 2. 添加资源网址格式后在浮动卡片中增加资源链接  
-  <img src="epcard.png" width="250">
+  <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/epcard.png" width="250">
 
 3. 点击修改状态按钮后立即修改卡片状态  
-  <img src="epupdate.png" width="250">
+  <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/epupdate.png" width="250">
 
 4. 点击资源链接后自动更新为“看过”，可关闭，默认状态可在代码中修改`autoMark`为`ture`或`false`。  
-  <img src="automark.png" width="250">
+  <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/automark.png" width="250">
 
 注：SP的剧集不在资源考虑范围内
 
