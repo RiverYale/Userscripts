@@ -22,7 +22,7 @@ if (17 == e.keyCode) {        // Ctrl 弹幕开关
 	danmuToggle();
 } 
 ```
-![keyCode对照表](https://riveryale.github.io/Userscripts/assets/pic/BilibiliShortcut/keyCode.png)
+![keyCode对照表](https://riveryale.github.io/Userscripts/assets/pic/BilibiliShortcut/keyCode.png)  
 [查看数据来源](http://www.phpweblog.net/kiyone/archive/2007/04/19/1138.html)
 
 <br/>
