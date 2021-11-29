@@ -7,7 +7,7 @@
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
 // @match        *://chii.in
-// @icon         https://bangumi.tv/img/favicon.ico
+// @icon         https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/icon.png
 // @run-at       document-end
 // @compatible   chrome
 // @compatible   edge
