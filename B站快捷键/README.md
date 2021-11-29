@@ -1,6 +1,6 @@
 # 脚本说明
 
-> [在Greasy Fork上安装](https://greasyfork.org/zh-CN/scripts/436274-b%E7%AB%99%E5%BF%AB%E6%8D%B7%E9%94%AE)
+> [在Greasy Fork上安装](https://greasyfork.org/zh-CN/scripts/436274)
 
 该脚本为B站视频（video）、番剧（bangumi）、直播（live）页面添加了一些快捷键，虽然B站部分页面提供一些播放的快捷键，但较分散，该脚本进行了调整并添加了新的快捷键。
 1. <kbd>Ctrl</kbd> 开关弹幕

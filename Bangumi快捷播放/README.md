@@ -1,6 +1,6 @@
 # 脚本说明
 
-> [在Greasy Fork上安装](https://greasyfork.org/zh-CN/scripts/436275-bangumi%E5%BF%AB%E6%8D%B7%E6%92%AD%E6%94%BE)
+> [在Greasy Fork上安装](https://greasyfork.org/zh-CN/scripts/436275)
 
 该脚本用于Bangumi登陆后，首页追番框中显示中文标题，浮动卡片增加对应集数播放源（需手动添加网址格式），更新剧集状态后自动更新卡片信息
 1. 首页追番框中显示中文标题，交换了鼠标悬浮时的内容和页面的内容，使得中文显示在页面上  
@@ -69,3 +69,5 @@ var src_dict = {
 
 # 其他
 [GitHub Pages](https://riveryale.github.io/Userscripts/)
+
+[Bangumi动画搜索 跳转AniDB/MyAnimeList/ANN/TMDB和动漫花园等BT站/在线播放站一键跳转](https://greasyfork.org/zh-CN/scripts/405283)
