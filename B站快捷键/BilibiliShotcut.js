@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         B站快捷键
-// @description  B站播放视频或直播时可用的快捷键
+// @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @version      4.3
 // @author       RiverYale
