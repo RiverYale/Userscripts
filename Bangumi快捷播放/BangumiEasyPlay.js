@@ -7,12 +7,14 @@
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
 // @match        *://chii.in
-// @icon         *://bangumi.tv/img/favicon.ico
+// @icon         https://bangumi.tv/img/favicon.ico
 // @run-at       document-end
 // @compatible   chrome
 // @compatible   edge
 // @license      MIT License
 // ==/UserScript==
+
+/*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 var autoMark = true;				// 默认点击链接后自动标记为看过
 var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除
@@ -47,6 +49,8 @@ var src_dict = {
 		296109: [3710, 1, 0],			// 国王排名
 	},
 };
+
+/*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 $(function(){
 	if($(".loginPanel").length == 1) {

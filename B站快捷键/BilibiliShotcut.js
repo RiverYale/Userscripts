@@ -2,18 +2,20 @@
 // @name         B站快捷键
 // @description  B站播放视频或直播时可用的快捷键
 // @namespace    https://github.com/RiverYale/Userscripts/
-// @version      4.2
+// @version      4.3
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
 // @match        *://www.bilibili.com/blackboard/*
 // @match        *://live.bilibili.com/*
-// @icon         *://www.bilibili.com/favicon.ico?v=1
+// @icon         https://www.bilibili.com/favicon.ico?v=1
 // @run-at       document-start
 // @compatible   chrome
 // @compatible   edge
 // @license      MIT License
 // ==/UserScript==
+
+/*========== 更新脚本前注意保存自己修改的内容！ ==========*/
 
 var onKeyDown = function (e) {
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
@@ -36,25 +38,27 @@ var onKeyDown = function (e) {
 }
 document.addEventListener("keydown", onKeyDown);
 
+/*========== 更新脚本前注意保存自己修改的内容！ ==========*/
+
 var pageType = 0;
 if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 	pageType = 0;
-} else if(document.URL.indexOf("https://www.bilibili.com/bangumi") >= 0) {
-	pageType = 1;
 } else if(document.URL.indexOf("https://www.bilibili.com/blackboard") >= 0) {
+	pageType = 1;
+} else if(document.URL.indexOf("https://www.bilibili.com/bangumi") >= 0) {
 	pageType = 2;
 } else if(document.URL.indexOf("https://live.bilibili.com") >= 0) {
 	pageType = 3;
 }
 
 function danmuToggle() {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
-		case 2:
+		case 1:
 			fireKeyEvent(document.querySelector('body'), 'keydown', 68);
 			fireKeyEvent(document.querySelector('body'), 'keyup', 68);
 			break;
-		case 1:
+		case 2:
 			document.querySelectorAll('[aria-label="弹幕显示隐藏"] .bui-switch-input')[0].click();
 			break;
 		case 3:
@@ -67,10 +71,9 @@ function danmuToggle() {
 
 function videoScale() {
 	var video;
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
-		case 2:
 			var video_wrapper = document.querySelector(".bilibili-player-video");
 			video_wrapper.style.justifyContent = 'center';
 			video_wrapper.style.alignItems = 'center';
@@ -80,6 +83,13 @@ function videoScale() {
 				style_node.innerHTML = 'bwp-video { height: 100%; }';
 				video_wrapper.appendChild(style_node);
 			}
+			break;
+		case 2:
+			var video_wrapper = document.querySelector(".bpx-player-video-wrap");
+			video_wrapper.style.display = 'flex';
+			video_wrapper.style.justifyContent = 'center';
+			video_wrapper.style.alignItems = 'center';
+			video = video_wrapper.children[0];
 			break;
 		case 3:
 			video = document.querySelector("video");
@@ -99,10 +109,9 @@ function videoScale() {
 }
 
 function fullScreenToggle() {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
-		case 2:
 			// var fullScreen = document.querySelector("[data-text='进入全屏']");
 			// if (fullScreen == null) {
 			// 	fullScreen = document.querySelector("[data-text='退出全屏']");
@@ -110,6 +119,9 @@ function fullScreenToggle() {
 			// fullScreen.click();
 			fireKeyEvent(document.querySelector('body'), 'keydown', 70);
 			fireKeyEvent(document.querySelector('body'), 'keyup', 70);
+			break;
+		case 2:
+			document.querySelector(".squirtle-fullscreen-wrap").children[0].click();
 			break;
 		case 3:
 			var video = document.querySelector("video");
@@ -120,10 +132,9 @@ function fullScreenToggle() {
 }
 
 function wideScreenToggel() {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
-		case 2:
 			var wideScreen = document.querySelector("[data-text='宽屏模式']");
 			if (wideScreen == null) {
 				wideScreen = document.querySelector("[data-text='进入宽屏']");
@@ -132,6 +143,9 @@ function wideScreenToggel() {
 				wideScreen = document.querySelector("[data-text='退出宽屏']");
 			}
 			wideScreen.click();
+			break;
+		case 2:
+			document.querySelector(".squirtle-widescreen-wrap").children[0].click();
 			break;
 		case 3:
 			var video = document.querySelector("video");
@@ -142,16 +156,21 @@ function wideScreenToggel() {
 }
 
 function speedAdjust(upOrDown) {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
 		case 2:
-			// imitateMouseClick("contextmenu", video, 10, 10);
-			// danmuToggle();
-			var video = document.querySelector(".bilibili-player-video");
-			var step = document.querySelectorAll('.bilibili-player-video-btn-speed-menu')[0].children;
+			var video = document.querySelector("video");
+			var step = document.querySelectorAll('.bilibili-player-video-btn-speed-menu')[0];
+			if (video == null) {
+				video = document.querySelector("bwp-video");
+			}
+			if (step == undefined) {
+				step = document.querySelectorAll('.squirtle-speed-select-list')[0];
+			}
+			step = step.children;
 			for (let i = 0; i < step.length; i++) {
-				if(-1 != step[i].getAttribute("class").search("bilibili-player-active")) {
+				if (-1 != step[i].getAttribute("class").search("active")) {
 					var infoText = step[i].innerHTML;
 					if ("down" == upOrDown && i < step.length - 1) {
 						step[i + 1].click();
@@ -163,8 +182,7 @@ function speedAdjust(upOrDown) {
 					break;
 				}
 			}
-			showInfo(video, infoText);
-			// danmuToggle();
+			showInfo(video.parentNode, infoText);
 			break;
 		case 3:
 			break;
@@ -172,7 +190,7 @@ function speedAdjust(upOrDown) {
 }
 
 function restart() {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
 		case 2:
@@ -182,7 +200,10 @@ function restart() {
 				jumpElectric.click();
 			}
 			var endingPanel = document.querySelector(".bilibili-player-ending-panel");
-			var restartIcon = document.querySelector(".bilibili-player-upinfo-span.restart")
+			if (2 == pageType) {
+				endingPanel = endingPanel.parentNode;
+			}
+			var restartIcon = document.querySelector(".restart");
 			if (endingPanel != null && window.getComputedStyle(endingPanel).display == 'block') {
 				restartIcon.click();
 			}
@@ -196,7 +217,7 @@ function restart() {
 }
 
 function livePause(e) {
-	switch(pageType) {
+	switch (pageType) {
 		case 0:
 		case 1:
 		case 2:
