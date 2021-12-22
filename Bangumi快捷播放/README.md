@@ -61,7 +61,7 @@ var src_dict = {
 
 # 兼容性
 - 资源网址的网址必须有固定格式，包括番剧标识符，播放路线（若没有填则填0），有规律的播放集数
-- 可能与其他快捷键冲突
+- 可能与其它脚本冲突
 - 测试过的应用（其他不保证）
   - Microsoft Edge 版本 96.0.1054.34 (官方内部版本) (64 位)
   - Google Chrome 版本 96.0.4664.45 (正式版本) (64 位)
@@ -73,3 +73,5 @@ var src_dict = {
 [GitHub Pages](https://riveryale.github.io/Userscripts/)
 
 [Bangumi动画搜索 跳转AniDB/MyAnimeList/ANN/TMDB和动漫花园等BT站/在线播放站一键跳转](https://greasyfork.org/zh-CN/scripts/405283)
+
+_转载请注明出处_
