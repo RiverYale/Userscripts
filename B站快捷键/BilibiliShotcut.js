@@ -2,7 +2,7 @@
 // @name         B站快捷键
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
-// @version      4.3
+// @version      4.4
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -34,6 +34,10 @@ var onKeyDown = function (e) {
 		restart();
 	} else if (32 == e.keyCode) {		// Space 直播时暂停
 		livePause(e);
+	} else if (38 == e.keyCode) {		// ↑键 直播时音量+
+		volumeAdjust(e, "up");
+	} else if (40 == e.keyCode) {		// ↓键 直播时音量-
+		volumeAdjust(e, "down");
 	}
 }
 document.addEventListener("keydown", onKeyDown);
@@ -227,6 +231,29 @@ function livePause(e) {
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
 			document.querySelectorAll(".left-area.svelte-1dsiks1 .icon")[0].click()
+			break;
+	}
+}
+
+function volumeAdjust(e, upOrDown) {
+	switch (pageType) {
+		case 0:
+		case 1:
+		case 2:
+			break;
+		case 3:
+			e.preventDefault();
+			var video = document.querySelector("video");
+			var vol = Math.floor(video.volume * 10);
+			if ("up" == upOrDown) {
+				vol += 1;
+				vol = Math.min(10, vol);
+			} else if ("down" == upOrDown) {
+				vol -= 1;
+				vol = Math.max(0, vol);
+			}
+			video.volume = vol / 10;
+			showInfo(video.parentNode, "音量 " + (vol*10), 150);
 			break;
 	}
 }
