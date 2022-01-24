@@ -2,11 +2,13 @@
 // @name         B站快捷键
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
-// @version      4.4
+// @homepage     https://riveryale.github.io/Userscripts/
+// @version      4.5
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
 // @match        *://www.bilibili.com/blackboard/*
+// @match        *://www.bilibili.com/festival/*
 // @match        *://live.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico?v=1
 // @run-at       document-start
@@ -48,6 +50,8 @@ var pageType = 0;
 if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 	pageType = 0;
 } else if(document.URL.indexOf("https://www.bilibili.com/blackboard") >= 0) {
+	pageType = 1;
+} else if(document.URL.indexOf("https://www.bilibili.com/festival") >= 0) {
 	pageType = 1;
 } else if(document.URL.indexOf("https://www.bilibili.com/bangumi") >= 0) {
 	pageType = 2;
