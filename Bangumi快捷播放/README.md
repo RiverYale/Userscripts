@@ -75,3 +75,9 @@ var src_dict = {
 [Bangumi动画搜索 跳转AniDB/MyAnimeList/ANN/TMDB和动漫花园等BT站/在线播放站一键跳转](https://greasyfork.org/zh-CN/scripts/405283)
 
 _转载请注明出处_
+
+<br/>
+
+# 更新日志
+- v2.4
+  - 修复番剧看完后，中文标题不显示的问题
