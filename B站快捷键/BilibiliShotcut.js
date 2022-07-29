@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      4.5
+// @version      5.0
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -22,7 +22,7 @@
 var onKeyDown = function (e) {
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
 		danmuToggle();
-	} else if (16 == e.keyCode) {		// Shift 画面占比调整
+	} else if (76 == e.keyCode) {		// L 画面占比调整
 		videoScale();
 	} else if (191 == e.keyCode) {		// /? 全屏
 		fullScreenToggle();
@@ -37,14 +37,16 @@ var onKeyDown = function (e) {
 	} else if (32 == e.keyCode) {		// Space 直播时暂停
 		livePause(e);
 	} else if (38 == e.keyCode) {		// ↑键 直播时音量+
-		volumeAdjust(e, "up");
+		liveVolumeAdjust(e, "up");
 	} else if (40 == e.keyCode) {		// ↓键 直播时音量-
-		volumeAdjust(e, "down");
+		liveVolumeAdjust(e, "down");
+	} else if (77 == e.keyCode) {		// M键 静音开关
+		liveMutedToggle(e);
 	}
 }
 document.addEventListener("keydown", onKeyDown);
 
-/*========== 更新脚本前注意保存自己修改的内容！ ==========*/
+/*================== 更新脚本前注意保存自己修改的内容！ ==================*/
 
 var pageType = 0;
 if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
@@ -63,16 +65,17 @@ function danmuToggle() {
 	switch (pageType) {
 		case 0:
 		case 1:
+		case 2:
 			fireKeyEvent(document.querySelector('body'), 'keydown', 68);
 			fireKeyEvent(document.querySelector('body'), 'keyup', 68);
 			break;
-		case 2:
-			document.querySelectorAll('[aria-label="弹幕显示隐藏"] .bui-switch-input')[0].click();
-			break;
+		// case 2:
+		// 	document.querySelectorAll('[aria-label="弹幕显示隐藏"] .bui-switch-input')[0].click();
+		// 	break;
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".right-area.svelte-1dsiks1 .icon")[2].click()
+			document.querySelectorAll(".right-area.svelte-1dsiks1 .icon")[3].click()
 			break;
 	}
 }
@@ -82,16 +85,16 @@ function videoScale() {
 	switch (pageType) {
 		case 0:
 		case 1:
-			var video_wrapper = document.querySelector(".bilibili-player-video");
-			video_wrapper.style.justifyContent = 'center';
-			video_wrapper.style.alignItems = 'center';
-			video = video_wrapper.children[0];
-			if (video_wrapper.children.length < 2) {
-				var style_node = document.createElement('style');
-				style_node.innerHTML = 'bwp-video { height: 100%; }';
-				video_wrapper.appendChild(style_node);
-			}
-			break;
+			// var video_wrapper = document.querySelector(".bilibili-player-video");
+			// video_wrapper.style.justifyContent = 'center';
+			// video_wrapper.style.alignItems = 'center';
+			// video = video_wrapper.children[0];
+			// if (video_wrapper.children.length < 2) {
+			// 	var style_node = document.createElement('style');
+			// 	style_node.innerHTML = 'bwp-video { height: 100%; }';
+			// 	video_wrapper.appendChild(style_node);
+			// }
+			// break;
 		case 2:
 			var video_wrapper = document.querySelector(".bpx-player-video-wrap");
 			video_wrapper.style.display = 'flex';
@@ -120,17 +123,13 @@ function fullScreenToggle() {
 	switch (pageType) {
 		case 0:
 		case 1:
-			// var fullScreen = document.querySelector("[data-text='进入全屏']");
-			// if (fullScreen == null) {
-			// 	fullScreen = document.querySelector("[data-text='退出全屏']");
-			// }
-			// fullScreen.click();
+		case 2:
 			fireKeyEvent(document.querySelector('body'), 'keydown', 70);
 			fireKeyEvent(document.querySelector('body'), 'keyup', 70);
 			break;
-		case 2:
-			document.querySelector(".squirtle-fullscreen-wrap").children[0].click();
-			break;
+		// case 2:
+			// document.querySelector(".squirtle-fullscreen-wrap").children[0].click();
+			// break;
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
@@ -143,14 +142,7 @@ function wideScreenToggel() {
 	switch (pageType) {
 		case 0:
 		case 1:
-			var wideScreen = document.querySelector("[data-text='宽屏模式']");
-			if (wideScreen == null) {
-				wideScreen = document.querySelector("[data-text='进入宽屏']");
-			}
-			if (wideScreen == null) {
-				wideScreen = document.querySelector("[data-text='退出宽屏']");
-			}
-			wideScreen.click();
+			document.querySelector(".bpx-player-ctrl-wide").click();
 			break;
 		case 2:
 			document.querySelector(".squirtle-widescreen-wrap").children[0].click();
@@ -169,7 +161,7 @@ function speedAdjust(upOrDown) {
 		case 1:
 		case 2:
 			var video = document.querySelector("video");
-			var step = document.querySelectorAll('.bilibili-player-video-btn-speed-menu')[0];
+			var step = document.querySelectorAll('.bpx-player-ctrl-playbackrate-menu')[0];
 			if (video == null) {
 				video = document.querySelector("bwp-video");
 			}
@@ -201,19 +193,33 @@ function restart() {
 	switch (pageType) {
 		case 0:
 		case 1:
-		case 2:
-			var electricPanel = document.querySelector(".bilibili-player-electric-panel");
-			var jumpElectric = document.querySelector(".bilibili-player-electric-panel-jump-content");
-			if (electricPanel != null && window.getComputedStyle(electricPanel).display == 'block') {
+			var re = function() {
+				var endingPanel = document.querySelector(".bpx-player-ending-panel");
+				var restartIcon = document.querySelector("[data-action='restart']");
+				if (endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
+					restartIcon.click();
+				}
+			}
+
+			var electricPanel = document.querySelector(".bpx-player-electric-panel");
+			var jumpElectric = document.querySelector(".bpx-player-electric-jump");
+			if (electricPanel != null && window.getComputedStyle(electricPanel).visibility != 'hidden') {
 				jumpElectric.click();
+				setTimeout(re, 500)
+			} else {
+				re();
 			}
-			var endingPanel = document.querySelector(".bilibili-player-ending-panel");
-			if (2 == pageType) {
-				endingPanel = endingPanel.parentNode;
-			}
+			break;
+		case 2:
+			var endingPanel = document.querySelector(".bpx-player-ending-panel");
 			var restartIcon = document.querySelector(".restart");
-			if (endingPanel != null && window.getComputedStyle(endingPanel).display == 'block') {
-				restartIcon.click();
+			if (endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
+				if(restartIcon == null) {
+					fireKeyEvent(document.querySelector('body'), 'keydown', 32);
+					fireKeyEvent(document.querySelector('body'), 'keyup', 32);
+				} else {
+					restartIcon.click();
+				}
 			}
 			break;
 		case 3:
@@ -239,7 +245,7 @@ function livePause(e) {
 	}
 }
 
-function volumeAdjust(e, upOrDown) {
+function liveVolumeAdjust(e, upOrDown) {
 	switch (pageType) {
 		case 0:
 		case 1:
@@ -258,6 +264,25 @@ function volumeAdjust(e, upOrDown) {
 			}
 			video.volume = vol / 10;
 			showInfo(video.parentNode, "音量 " + (vol*10), 150);
+
+			if (video.muted) {
+				liveMutedToggle(e)
+			}
+			break;
+	}
+}
+
+function liveMutedToggle(e) {
+	switch (pageType) {
+		case 0:
+		case 1:
+		case 2:
+			break;
+		case 3:
+			e.preventDefault();
+			var video = document.querySelector("video");
+			imitataMouseMove(video, 0, 0);
+			document.querySelectorAll(".left-area.svelte-1dsiks1 .icon")[2].click()
 			break;
 	}
 }
