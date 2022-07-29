@@ -17,7 +17,7 @@
 // @license      MIT License
 // ==/UserScript==
 
-/*========== 更新脚本前注意保存自己修改的内容！ ==========*/
+/*================== 更新脚本前注意保存自己修改的内容！ ==================*/
 
 var onKeyDown = function (e) {
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
