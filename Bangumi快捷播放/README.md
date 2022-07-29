@@ -72,6 +72,8 @@ var src_dict = {
 <br/>
 
 # 其他
+- 手动修改代码后，插件可能会停止自动更新，功能出现问题时可到脚本安装页面查看是否有更新
+
 [GitHub Pages](https://riveryale.github.io/Userscripts/)
 
 [Bangumi动画搜索 跳转AniDB/MyAnimeList/ANN/TMDB和动漫花园等BT站/在线播放站一键跳转](https://greasyfork.org/zh-CN/scripts/405283)
