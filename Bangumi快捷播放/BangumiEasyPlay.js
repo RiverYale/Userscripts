@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片状态实时改变无需刷新，浮动卡片增加对应集数播放源（需手动添加网址格式）
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      2.5
+// @version      2.6
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -18,47 +18,26 @@
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 var autoMark = true;				// 默认点击链接后自动标记为看过
-var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除
+var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除，若无需验证则删除引号中的内容
 var src_dict = {
 	"AGE动漫": {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体集数偏移, [集数, 增加偏移]...]
-		pattern: "https://www.agemys.com/play/${id}?playid=${ch}_${ep}",
-		331887: [20210249, 2, -11, 		// 86-不存在的地域-
-				[17.5, 0.5], [18, 0.5], [18.5, 0.5], [19, 0.5]],
-		322955: [20210258, 2, 0],		// 白金终局
-		296109: [20210169, 2, 0],		// 国王排名
-		328195: [20210098, 2, 0],		// 鬼灭之刃 游郭篇
-		331752: [20220062, 2, -75],		// 进击的巨人 最终季
-		336458: [20220063, 2, 0],		// 与变成了异世界美少女的大叔一起冒险
-		312958: [20200302, 2, 0],		// 公主连结！Re:Dive 第二季
-		333158: [20220070, 2, 0],		// 更衣人偶坠入爱河
-		275371: [20190156, 3, 0],		// 只要长得可爱，即使是变态你也喜欢吗？
+		pattern: "https://www.agemys.cc/play/${id}?playid=${ch}_${ep}",
+		search: "https://www.agemys.cc/search?query=${keyword}&page=1",
+		326895: [20220092, 2, 0],		// 夏日重现
+		298477: [20200099, 2, 0],		// 来自深渊 烈日的黄金乡
+		316131: [20220129, 2, 0],		// 邪神与厨二病少女 X
+		335389: [20210203, 2, 0],		// OVERLORD IV
+		375817: [20220236, 2, 0],		// 契约之吻
+		364450: [20220142, 2, 0],		// 莉可丽丝
+		339326: [20220134, 2, 0],		// 异世界舅舅
+		326874: [20220001, 2, 1],		// 期待在地下城邂逅有错吗 Ⅳ 新章 迷宫篇
+		315745: [20220002, 2, -12],		// 租借女友 第二季
+		330057: [20210125, 2, 0],		// 打工吧！！魔王大人
 	},
-	"森之屋": {
-		pattern: "https://www.senfun.net/watch/${id}/${ch}/${ep}.html",
-		331887: ['4hGGGQ', 1, -11,		// 86-不存在的地域-
-				[17.5, 0.5], [18, 0.5], [18.5, 0.5], [19, 0.5]],
-		322955: ['GuGGGQ', 1, 0],		// 白金终局
-		296109: ['fhGGGQ', 1, 0],		// 国王排名
-		328195: ['DuGGGQ', 1, 0],		// 鬼灭之刃 游郭篇
-		331752: ['DbGGGQ', 1, -75],		// 进击的巨人 最终季
-		336458: ['9bGGGQ', 1, 0],		// 与变成了异世界美少女的大叔一起冒险
-		312958: ['JbGGGQ', 1, 0],		// 公主连结！Re:Dive 第二季
-		333158: ['4bGGGQ', 1, 0],		// 更衣人偶坠入爱河
-		275371: ['AgGGGQ', 2, 0],		// 只要长得可爱，即使是变态你也喜欢吗？
-	},
-	"bimi动漫": {
-		pattern: "http://www.bimiacg4.net/bangumi/${id}/play/${ch}/${ep}/",
-		331887: [3665, 1, -11,			// 86-不存在的地域-
-				[17.5, 0.5], [18, 0.5], [18.5, 0.5], [19, 0.5]],
-		322955: [3712, 1, 0],			// 白金终局
-		296109: [3710, 1, 0],			// 国王排名
-		328195: [3734, 1, 0],			// 鬼灭之刃 游郭篇
-	},
-	"MaliMali": {
-		pattern: "https://www.malimali3.com/play/${id}-${ch}-${ep}.html",
-	},
+	"OmoFun": {
+		search: "https://omofun.tv/vod/search.html?wd=${keyword}"
+	}
 };
-
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 if($(".loginPanel").length == 1) {
@@ -131,6 +110,9 @@ epLinkList.forEach(epLink => {
 		// 根据资源字典添加资源链接
 		var dict = src_dict[srcName];
 		if(dict[subid] == undefined) {
+			var subjectName = $(`[data-subject-id=${subid}][class=textTip]`).attr('data-subject-name-cn');
+			var searchHref = dict['search'].replace(/\$\{keyword\}/g, subjectName)
+			$(srcPanel).append(`<a href="${searchHref}" style="margin-right: 10px;display: inline-block;color: #555" target="_blank">${srcName}(搜索)</a>`);
 			continue;
 		}
 		var srcHref = getSrcHref(dict, subid, ep);
@@ -138,7 +120,6 @@ epLinkList.forEach(epLink => {
 		$(alink).attr("href", srcHref);
 		$(alink).text(srcName);
 		$(srcPanel).append(alink);
-		alinkNum++;
 
 		// 点击资源链接后标记为[看过]
 		$(alink).click(() => {
@@ -153,13 +134,10 @@ epLinkList.forEach(epLink => {
 			var authHref = srcHref;
 		}
 	}
-	if(alinkNum == 0) {
-		$(srcPanel).append('<a href="javascript:;">未添加资源ID</a>');
-	}
 	$(epLink.rel).append(srcPanel);
 
 	// 测试资源是否可达
-	if(authHref != undefined) {
+	if(authHref != undefined && authHref != "") {
 		var isRunUrl = function(url){
 			return new Promise(function (resolve, reject) {
 				var dom = document.createElement('link');
