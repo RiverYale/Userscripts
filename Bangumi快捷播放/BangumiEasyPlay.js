@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片状态实时改变无需刷新，浮动卡片增加对应集数播放源（需手动添加网址格式）
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      2.6
+// @version      2.7
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -35,7 +35,7 @@ var src_dict = {
 		330057: [20210125, 2, 0],		// 打工吧！！魔王大人
 	},
 	"OmoFun": {
-		search: "https://omofun.tv/vod/search.html?wd=${keyword}"
+		// search: "https://omofun.tv/vod/search.html?wd=${keyword}"
 	}
 };
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
@@ -111,8 +111,12 @@ epLinkList.forEach(epLink => {
 		var dict = src_dict[srcName];
 		if(dict[subid] == undefined) {
 			var subjectName = $(`[data-subject-id=${subid}][class=textTip]`).attr('data-subject-name-cn');
-			var searchHref = dict['search'].replace(/\$\{keyword\}/g, subjectName)
-			$(srcPanel).append(`<a href="${searchHref}" style="margin-right: 10px;display: inline-block;color: #555" target="_blank">${srcName}(搜索)</a>`);
+			if(dict['search'] == undefined) {
+				$(srcPanel).append(`<a href="javascript:alert('未添加搜索地址格式！');" style="margin-right: 10px;display: inline-block;color: #555">${srcName}(搜索)</a>`);
+			} else {
+				var searchHref = dict['search'].replace(/\$\{keyword\}/g, subjectName)
+				$(srcPanel).append(`<a href="${searchHref}" style="margin-right: 10px;display: inline-block;color: #555" target="_blank">${srcName}(搜索)</a>`);
+			}
 			continue;
 		}
 		var srcHref = getSrcHref(dict, subid, ep);
