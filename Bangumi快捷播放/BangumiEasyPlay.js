@@ -105,7 +105,6 @@ epLinkList.forEach(epLink => {
 	var subid = $("#"+epLink.id).attr("subject_id");
 	var ep = Number($("#"+epLink.id).text());
 	var srcPanel = $("<div><hr class='board'></div>");
-	var alinkNum = 0;
 	for(let srcName in src_dict) {
 		// 根据资源字典添加资源链接
 		var dict = src_dict[srcName];
