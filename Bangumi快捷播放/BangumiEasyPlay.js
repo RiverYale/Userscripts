@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片状态实时改变无需刷新，浮动卡片增加对应集数播放源（需手动添加网址格式）
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      2.7
+// @version      2.8
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -33,9 +33,10 @@ var src_dict = {
 		326874: [20220001, 2, 1],		// 期待在地下城邂逅有错吗 Ⅳ 新章 迷宫篇
 		315745: [20220002, 2, -12],		// 租借女友 第二季
 		330057: [20210125, 2, 0],		// 打工吧！！魔王大人
+		348240: [20200283, 2, 0],		// 凡人修仙传
 	},
 	"OmoFun": {
-		// search: "https://omofun.tv/vod/search.html?wd=${keyword}"
+		search: "https://omofun.tv/vod/search.html?wd=${keyword}"
 	}
 };
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
@@ -45,17 +46,35 @@ if($(".loginPanel").length == 1) {
 }
 
 /* 标题中日文对调 */
-var titles = Array.from($(".tinyHeader .textTip:not(.prgCheckIn)"))
-		.concat(Array.from($(".subjectItem.title.textTip")))
-		.concat(Array.from($(".l.textTip")))
+var titles = Array.from($(".tinyHeader .textTip:not(.prgCheckIn)"))		// 平铺模式
+	.concat(Array.from($(".l.textTip")))		// 列表模式右侧
 titles.forEach(title => {
 	var text = $(title).text();
-	$(title).text($(title).attr("data-original-title"));
+	var data_original_title = $(title).attr("data-original-title");
+	if(!data_original_title){
+		return true;
+	}
+	$(title).text(data_original_title);
 	$(title).attr("data-original-title", text);
 });
 if(titles.length == 0) {
 	return;
 }
+titles = Array.from($(".subjectItem.title.textTip"))		// 列表模式左侧 - 1, 2, 3
+titles.forEach(title => {
+	var text = $(title).find('span').text();
+	var data_original_title = $(title).attr("data-original-title");
+	if(!data_original_title){
+		return true;
+	}
+	$(title).find('span').text(data_original_title);
+	$(title).attr('data-original-title', text);
+
+	var preALink = $(title).prev().prev();
+	var preALink_title = $(preALink).attr('data-original-title');
+	$(preALink).attr('data-original-title', preALink_title.replace(text, data_original_title));
+});
+
 
 /* 点击链接后是否自动标记为[看过] */
 var _ul = $('<ul style="display: inline-block; float:right;"></ul>');
@@ -109,7 +128,7 @@ epLinkList.forEach(epLink => {
 		// 根据资源字典添加资源链接
 		var dict = src_dict[srcName];
 		if(dict[subid] == undefined) {
-			var subjectName = $(`[data-subject-id=${subid}][class=textTip]`).attr('data-subject-name-cn');
+			var subjectName = $(`[data-subject-id=${subid}][class=textTip]`).text();
 			if(dict['search'] == undefined) {
 				$(srcPanel).append(`<a href="javascript:alert('未添加搜索地址格式！');" style="margin-right: 10px;display: inline-block;color: #555">${srcName}(搜索)</a>`);
 			} else {
