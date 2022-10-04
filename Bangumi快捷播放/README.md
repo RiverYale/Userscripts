@@ -12,7 +12,7 @@
 3. 点击修改状态按钮后立即修改卡片状态  
   <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/epupdate.png" width="250">
 
-4. 点击资源链接后自动更新为“看过”，可关闭，默认状态可在代码中修改`autoMark`为`ture`或`false`。  
+4. 点击资源链接后自动更新为“看过”，可关闭，默认状态可在代码中修改`autoMark`为`true`或`false`。  
   <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/automark.png" width="250">
 
 注：SP的剧集不在资源考虑范围内
@@ -23,7 +23,7 @@
 > __提示：在更新脚本前记得保留自己的修改__
 
 ## 修改“自动标记”的默认状态
-修改代码中的`autoMark`为`ture`表示开启或`false`表示关闭。
+修改代码中的`autoMark`为`true`表示开启或`false`表示关闭。
 ```
 var autoMark = true;      // 默认点击链接后自动标记为看过
 ```

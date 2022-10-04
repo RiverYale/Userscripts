@@ -138,7 +138,7 @@ epLinkList.forEach(epLink => {
 			continue;
 		}
 		var srcHref = getSrcHref(dict, subid, ep);
-		var alink = $('<a style="margin-right: 10px;display: inline-block;" target="_blank"></a>');
+		var alink = $('<a style="margin-right:10px; display:inline-block; font-weight:bold;" target="_blank"></a>');
 		$(alink).attr("href", srcHref);
 		$(alink).text(srcName);
 		$(srcPanel).append(alink);

@@ -222,6 +222,13 @@ function restart() {
 				}
 			}
 			break;
+
+			// var electricPanel = document.querySelector(".bpx-player-electric-panel");
+			// var endingPanel = document.querySelector(".bpx-player-ending-panel");
+			// if (electricPanel != null && window.getComputedStyle(electricPanel).visibility != 'hidden' || endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
+			// 	fireKeyEvent(document.querySelector('body'), 'keydown', 32);
+			// 	fireKeyEvent(document.querySelector('body'), 'keyup', 32);
+			// }
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
