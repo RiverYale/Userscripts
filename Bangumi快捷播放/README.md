@@ -2,7 +2,7 @@
 
 > [在Greasy Fork上安装](https://greasyfork.org/zh-CN/scripts/436275)
 
-该脚本用于Bangumi登陆后，首页追番框中显示中文标题，浮动卡片增加对应集数播放源（需手动添加网址格式），更新剧集状态后自动更新卡片信息
+该脚本用于Bangumi登陆后，首页追番框中显示中文标题，浮动卡片增加对应集数快捷搜索和播放源（需手动添加网址格式），更新剧集状态后自动更新卡片信息
 1. 首页追番框中显示中文标题，交换了鼠标悬浮时的内容和页面的内容，使得中文显示在页面上  
   <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/title.png" width="350">
 

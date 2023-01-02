@@ -728,7 +728,9 @@
 	})
 	document.addEventListener('mousemove', function(e) {
 		if(appSwitchDragStart) {
-			appSwitchDrag = true;
+			if (e.movementY != 0) {
+				appSwitchDrag = true;
+			}
 			syncApp.addOffsetY(-e.movementY);
 		}
 	})

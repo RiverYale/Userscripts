@@ -597,7 +597,7 @@ document.body.appendChild(videoSyncApp);
 		window.setConns = this.setConns;
 	}
 })
-
+	
 var appSwitch = document.getElementsByClassName('app-switch')[0];
 var appSwitchDragStart = false;
 var appSwitchDrag = false;
@@ -607,7 +607,9 @@ appSwitch.addEventListener('mousedown', function(e) {
 })
 document.addEventListener('mousemove', function(e) {
 	if(appSwitchDragStart) {
-		appSwitchDrag = true;
+		if (e.movementY != 0) {
+			appSwitchDrag = true;
+		}
 		syncApp.addOffsetY(-e.movementY);
 	}
 })
