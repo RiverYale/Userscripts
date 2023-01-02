@@ -8,6 +8,7 @@
 3. 播放想要同步的视频，然后点击捕获
 4. 点击“连接”输入对方Peer ID
 5. 与好友测试视频是否同步播放、同步暂停、同步进度等
+6. 以上操作也可以自己开两个视频自己连接测试一下
 
 ![主界面](https://riveryale.github.io/Userscripts/assets/pic/VideoSync/main.png)  
 
