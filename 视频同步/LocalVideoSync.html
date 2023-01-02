@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAG6SURBVDhPjZM7z0FBEIZfx6EXEhGFQqHVEAoiCqJSqLT8B71GoxGFQiVRqiQ6lc4lKolLonOJEIkGcd3vzFiCRPI9zdmZs+/OzM4shKRerwu/3y9Wq5X0fLJcLkUwGBTNZlN6hFAg2e126Pf7SKVS0vNJMplEr9fDZrORHkCVX1itVng8HrTbbVSrVVgsFlwuFxiNRsxmMwwGA3i9XthsNqkAdNfrVUSjUY5KG0lwv99hMBhwu92g1+txPp+hqiqv6b9WHhqNBtR8Po/xeIxWqwWHw8ECEmslyfO1CDodFEVh8XQ6RSwWQ6FQAKUqyuXy4wb+SbFYFKFQSCh0GkUiFosFut0ur7/pdDrQOsFrTc9laNkoL3E2m0UkEsF+v2f7yXa7RTgcRi6XY5v2cylsSejkw+GA9XotPQ/m8zmOx+Mr8pMP8el0et32O3SJlCod8M6H2OfzwW63w+l0Ss8Dt9vNcxAIBKTngfLsJUE1U4rf0L1QyplMhu3nDChmsxmTyYSd/2U4HMJkMkFNp9NIJBJcp8vl4pp/Qe0ZjUYolUo8YTpqeq1WQ6VS4cdBKf6CAtDM0+OJx+P4A5YgKxpQJCX1AAAAAElFTkSuQmCC">
+	<link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css"></link>
+	<script src="https://cdn.jsdelivr.net/npm/artplayer@4.6.0/dist/artplayer.min.js"></script>
+	<script src="https://unpkg.com/peerjs@1.4.5/dist/peerjs.min.js"></script>
+	<title>本地视频同步</title>
+	<style>
+		body {
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+		}
+		input {
+			display: none;
+		}
+		#initBtn {
+			display: block;
+			position: absolute;
+			width: 200px;
+			height: 70px;
+			left: calc(50% - 100px);
+			top: calc(50% - 35px);
+			font-size: 20px;
+		}
+		.artplayer-app {
+			position: absolute;
+			width: 80vw;
+			height: 80vh;
+			left: calc(50% - 40vw);
+			top: calc(50% - 40vh);
+		}
+	</style>
+	<style>
+		.sync-menu-wrapper {
+			background: white;
+			display: block;
+			width: 400px;
+			height: 200px;
+			position: absolute;
+			bottom: 64px;
+			right: 10px;
+			overflow: hidden;
+			box-shadow: 0 3px 5px -1px rgb(0 0 0 / 20%), 0 6px 10px 0 rgb(0 0 0 / 14%), 0 1px 18px 0 rgb(0 0 0 / 12%);
+			transition: all .1s
+		}
+		.sync-menu-wrapper-hidden {
+			height: 0px;
+			width: 0px;
+		}
+		.sync-menu {
+			width: 400px;
+			height: 100%;
+		}
+		.sync-info-tab {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			height: 160px;
+		}
+		.sync-info-tab .mdui-row {
+			font-size: 14px;
+			line-height: 40px;
+		}
+		.sync-info-tab .mdui-row button {
+			height: 25px;
+			line-height: 25px;
+			padding: 0;
+			width: 40px;
+			min-width: 40px;
+			color: white !important;
+		}
+		.sync_switch_off .sync_switch_on {
+			display: none;
+		}
+		.sync_switch_on .sync_switch_off {
+			display: none;
+		}
+	</style>
+</head>
+<body class="mdui-theme-accent-blue">
+	<input type="file" id="videoFileInput" accept=".mp4,.ogg,.webm" onchange="videoFileInput()"> 
+	<input type="file" id="subtitleFileInput" accept=".vtt,.srt,.ass" onchange="subtitleFileInput()">
+	<div class="artplayer-app"></div>
+	<button id="initBtn" onclick="init()" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">选择播放文件</button>
+	<div class="mdui-fab-wrapper">
+		<button class="mdui-fab mdui-fab-mini mdui-color-theme-accent mdui-ripple" style="color: white;">
+			<i class="mdui-icon material-icons">screen_share</i>
+			<i class="mdui-icon mdui-fab-opened material-icons">close</i>
+		</button>
+		<div class='sync-menu-wrapper sync-menu-wrapper-hidden'>
+			<div class='sync-menu'>
+				<div class="mdui-tab mdui-tab-full-width" mdui-tab>
+					<a href="#sync-information" class="mdui-ripple mdui-tab-active">个人信息</a>
+					<a href="#sync-connection" class="mdui-ripple">连接列表</a>
+				</div>
+				<div id="sync-information" class="mdui-container-fluid sync-info-tab">
+					<div class="mdui-row sync_switch_off">
+						<div class="mdui-col-xs-3 mdui-text-right" style='font-weight:700;'>Peer ID：</div>
+						<div class="mdui-col-xs-6 mdui-text-left sync_switch_off">未获取</div>
+						<div class="mdui-col-xs-3 mdui-text-left sync_switch_off">
+							<button id='peerBtn' class="mdui-btn-dense mdui-btn mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '获取Peer ID用于连接'}">获取</button>
+						</div>
+						<div class="mdui-col-xs-9 mdui-text-left sync_switch_on">id</div>
+					</div>
+					<div class="mdui-row sync_switch_off">
+						<div class="mdui-col-xs-3 mdui-text-right" style='font-weight:700;'>连接状态：</div>
+						<div class="mdui-col-xs-6 mdui-text-left">未连接</div>
+						<div class="mdui-col-xs-3 mdui-text-left sync_switch_off">
+							<button id='connectBtn' class="mdui-btn-dense mdui-btn mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '输入对方Peer ID连接'}">连接</button>
+						</div>
+						<div class="mdui-col-xs-3 mdui-text-left sync_switch_on">
+							<button id='closeBtn' class="mdui-btn-dense mdui-btn mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '断开Peer ID连接'}">断开</button>
+						</div>
+					</div>
+					<div class="mdui-row sync_switch_off">
+						<div class="mdui-col-xs-3 mdui-text-right" style='font-weight:700;'>视频捕获：</div>
+						<div class="mdui-col-xs-6 mdui-text-left">未捕获</div>
+						<div class="mdui-col-xs-3 mdui-text-left sync_switch_off">
+							<button id='catchBtn' class="mdui-btn-dense mdui-btn mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '捕获正在播放的视频进行分享'}">捕获</button>
+						</div>
+					</div>
+				</div>
+				<div id="sync-connection" class="sync-info-tab">连接列表</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+	<script>
+		var art;
+		function videoFileInput() {
+			var file = document.getElementById('videoFileInput').files[0];
+			var url = URL.createObjectURL(file);
+			var title = file.name.substr(0, file.name.lastIndexOf('.'));
+			if(art) {
+				art.switchUrl(url, title)
+			} else {
+				art = new Artplayer({
+					container: '.artplayer-app',
+					url: url,
+					title: title,
+					volume: 1.0,
+					muted: false,
+					autoplay: false,
+					autoSize: true,
+					pip: true,
+					screenshot: true,
+					setting: true,
+					flip: true,
+					playbackRate: true,
+					aspectRatio: true,
+					fullscreen: true,
+					subtitleOffset: true,
+					miniProgressBar: true,
+					mutex: true,
+					playsInline: true,
+					autoPlayback: true,
+					theme: '#23ade5',
+					lang: navigator.language.toLowerCase(),
+					whitelist: ['*'],
+					moreVideoAttr: {
+						crossOrigin: 'anonymous',
+						preload: false
+					},
+					settings: [
+						{
+							html: '字幕',
+							icon: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
+							tooltip: '开启',
+							switch: true,
+							onSwitch: function (item) {
+								item.tooltip = item.switch ? '关闭' : '开启';
+								art.subtitle.show = !item.switch;
+								return !item.switch;
+							},
+						}
+					],
+					subtitle: {
+						url: '',
+						type: '',
+						style: {
+							color: '#ffffff',
+							fontSize: '25px',
+						},
+						encoding: 'utf-8',
+					},
+					controls: [
+						{
+							position: 'right',
+							tooltip: 'Meitantei.Conan.Hiiro.no.dangan.2021.BluRay.1080p.TrueHD5.1.x265.10bit-SuperMiao',
+							html: '<span style="margin:0 8px;">当前标题</span>',
+						},
+						{
+							position: 'right',
+							html: '<span style="margin:0 8px;">更换视频</span>',
+							tooltip: '重新选择需要播放的本地视频，仅支持部分格式',
+							click: function () {
+								document.getElementById('videoFileInput').click();  
+							},
+						},
+						{
+							position: 'right',
+							html: '<span style="margin:0 8px;">加载字幕</span>',
+							tooltip: '选择需要加载的本地字幕',
+							click: function () {
+								document.getElementById('subtitleFileInput').click();  
+							},
+						},
+					],
+				});
+				document.getElementById('initBtn').style.display = 'none';
+				// document.getElementsByTagName('body')[0].style.backgroundColor = 'black';
+			}
+		}
+
+		function subtitleFileInput() {
+			var file = document.getElementById('subtitleFileInput').files[0];
+			var url = URL.createObjectURL(file);
+			var name = file.name.substr(0, file.name.lastIndexOf('.'));
+			var type = file.name.substr(file.name.lastIndexOf('.') + 1);
+			if(art) {
+				art.subtitle.switch(url, {
+					name: name,
+					type: type
+				});
+			} else {
+				console.log('no video initialized')
+			}
+		}
+
+		function init() {
+			document.getElementById('videoFileInput').click();  
+		}
+	</script>
+	<script>
+		mdui.$('.mdui-fab').on('click', function(e) {
+			mdui.$(this).toggleClass('mdui-fab-opened');
+			mdui.$('.sync-menu-wrapper').toggleClass('sync-menu-wrapper-hidden');
+			mdui.$('.sync-menu-wrapper').prop('init', function (index, oldAttrValue) {
+				if(!oldAttrValue) {
+					mdui.$('.sync-menu-wrapper .mdui-tab-active').trigger('click');
+					return 'true';
+				}
+			});
+		});
+		mdui.$('#peerBtn').on('click', function(e) {
+			peerInit();
+		});
+		mdui.$('#connectBtn').on('click', function(e) {
+			peerConnect();
+		});
+		mdui.$('#closeBtn').on('click', function(e) {
+			for(let conn of conns) {
+				conn.close();
+			}
+			conns = [];
+			asServer = false;
+			mdui.$('#sync-information .mdui-row:nth-child(2)').addClass('sync_switch_off');
+			mdui.$('#sync-information .mdui-row:nth-child(2)').removeClass('sync_switch_on');
+			mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('连接已关闭');
+		});
+		mdui.$('#catchBtn').on('click', function(e) {
+			videoInit();
+		});
+
+		var peer = null;
+		var conns = [];
+		var asServer = false;
+		var lastPeerId = null;
+
+		var syncVideo = null;
+		var sync = true;
+
+		function peerInit() {
+			// Create own peer object with connection to shared PeerJS server
+			peer = new Peer(null, {
+				debug: 2
+			});
+			
+			
+			mdui.$('#sync-information .mdui-row:nth-child(1)').removeClass('sync_switch_off');
+			mdui.$('#sync-information .mdui-row:nth-child(1)').addClass('sync_switch_on');
+			mdui.$('#sync-information .mdui-row:nth-child(1) div:nth-child(4)').text('获取Peer ID中...');
+
+			peer.on('open', function (id) {
+				// Workaround for peer.reconnect deleting previous id
+				if (peer.id === null) {
+					console.log('Received null id from PeerServer');
+					peer.id = lastPeerId;
+				} else {
+					lastPeerId = peer.id;
+				}
+
+				console.log('Peer ID: ' + peer.id);
+
+				mdui.$('#sync-information .mdui-row:nth-child(1) div:nth-child(4)').text(peer.id);
+			});
+
+			peer.on('connection', function(c) { readyAsServer(c); });
+
+			peer.on('disconnected', function () {
+				console.log('PeerServer connection lost. Please reconnect');
+
+				// Workaround for peer.reconnect deleting previous id
+				peer.id = lastPeerId;
+				peer._lastServerId = lastPeerId;
+				peer.reconnect();
+			});
+
+			peer.on('close', function() {
+				conns = [];
+				console.log('PeerServer connection destroyed');
+			});
+
+			peer.on('error', function (err) {
+				console.log('PeerServer error: ', err);
+
+				mdui.$('#sync-information .mdui-row:nth-child(1)').addClass('sync_switch_off');
+				mdui.$('#sync-information .mdui-row:nth-child(1)').removeClass('sync_switch_on');
+				mdui.$('#sync-information .mdui-row:nth-child(1) div:nth-child(2)').text('获取失败');
+			});
+		};
+
+		function videoInit() {
+			let videos = document.querySelectorAll('video, bwp-video');
+			for(v of videos) {
+				if(!v.paused) {
+					syncVideo = v;
+					break;
+				}
+			}
+			console.log(syncVideo);
+			sync = true;
+			if(!syncVideo) {
+				mdui.$('#sync-information .mdui-row:nth-child(3) div:nth-child(2)').text('未找到正在播放的视频');
+				return;
+			}
+			
+			mdui.$('#sync-information .mdui-row:nth-child(3)').removeClass('sync_switch_off');
+			mdui.$('#sync-information .mdui-row:nth-child(3)').addClass('sync_switch_on');
+			mdui.$('#sync-information .mdui-row:nth-child(3) div:nth-child(2)').text('捕获成功');
+
+			syncVideo.addEventListener('play', function(event){
+				console.log('play', sync, conns.length)
+				if(sync && conns.length > 0) {
+					sendData(conns, {
+						command: 'play',
+						currentTime: syncVideo.currentTime
+					});
+				}
+			});
+
+			syncVideo.addEventListener('pause', function(event){
+				console.log('pause', sync, conns.length)
+				if(sync && conns.length > 0) {
+					sendData(conns, {
+						command: 'pause',
+						currentTime: syncVideo.currentTime
+					});
+				}
+			});
+
+			syncVideo.addEventListener('seeked', function(event){
+				console.log('seeked', sync, conns.length)
+				if(sync && conns.length > 0) {
+					sendData(conns, {
+						command: 'seeked',
+						currentTime: syncVideo.currentTime
+					});
+				}
+			});
+		}
+
+		function sendData(_conns, data) {
+			if(!Array.isArray(_conns)) {
+				_conns = [_conns];
+			}
+			for(let conn of _conns) {
+				data.senderId = peer.id;
+				data.receiverId = conn.peer;
+				conn.send(data)
+				console.log('Send data: ', data)
+			}
+		}
+
+		function handleData(type, data) {
+			console.log('Receive data: ', data);
+			if(type == 'server') {
+				let _conns = []
+				for(let c of conns) {
+					if(c.peer != data.senderId) {
+						_conns.push(c);
+					}
+				}
+				sendData(_conns, data);
+			}
+
+			sync = false;
+			if(data.currentTime) {
+				syncVideo.currentTime = data.currentTime;
+			}
+			switch (data.command) {
+				case 'play':
+					syncVideo.play();
+					break;
+				case 'pause':
+					syncVideo.pause();
+					break;
+				case 'text':
+					alert(data.content);
+					break;
+			}
+		}
+
+		function readyAsServer(conn) {
+			conn.on('open', function() {
+				console.log(asServer, conns.length)
+				if(!asServer && conns.length > 0) {
+					sendData(conn, {
+						command: 'text',
+						content: 'Target has already connected to another server'
+					});
+					setTimeout(function() { conn.close(); }, 500);
+					return;
+				}
+				asServer = true;
+				conns.push(conn)
+				console.log("A client connected: ", conn.peer);
+				mdui.$('#sync-information .mdui-row:nth-child(2)').removeClass('sync_switch_off');
+				mdui.$('#sync-information .mdui-row:nth-child(2)').addClass('sync_switch_on');
+				mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('已连接（主机）');
+
+				conn.on('data', function(data) {
+					handleData('server', data)
+				})
+			
+				conn.on('close', function () {
+					console.log("Client closed");
+					conns = [];
+					asServer = false;
+					mdui.$('#sync-information .mdui-row:nth-child(2)').addClass('sync_switch_off');
+					mdui.$('#sync-information .mdui-row:nth-child(2)').removeClass('sync_switch_on');
+					mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('对方已断开连接');
+				});
+			
+				conn.on('error', function (err) {
+					console.log("Connect error: ", err);
+				});
+			});
+		}
+
+		function readyAsClient(serverId) {
+
+			mdui.$('#sync-information .mdui-row:nth-child(2)').removeClass('sync_switch_off');
+			mdui.$('#sync-information .mdui-row:nth-child(2)').addClass('sync_switch_on');
+			mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('连接中...');
+
+			var conn = peer.connect(serverId, {
+				reliable: true
+			});
+			
+			conn.on('open', function () {
+				console.log("Connected to server: ", conn.peer);
+				mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('已连接（客户机）');
+			});
+
+			conn.on('data', function(data) {
+				handleData('client', data)
+			})
+
+			conn.on('close', function () {
+				console.log("Server closed");
+				conns = [];
+				mdui.$('#sync-information .mdui-row:nth-child(2)').addClass('sync_switch_off');
+				mdui.$('#sync-information .mdui-row:nth-child(2)').removeClass('sync_switch_on');
+				mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('对方已断开连接');
+			});
+
+			conn.on('error', function (err) {
+				console.log("Connect error: ", err);
+				mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('连接失败');
+			});
+
+			conns.push(conn);
+		}
+
+		var peerConnect = function() {
+			if(!peer) {
+				mdui.$('#sync-information .mdui-row:nth-child(2) div:nth-child(2)').text('未获取Peer ID');
+				return;
+			}
+			if(!asServer) {
+				let id = prompt('请输入对方ID');
+				if(id) {
+					readyAsClient(id);
+				}
+			}
+		}
+
+		var onKeyDown = function (e) {
+			sync = true;
+			if (187 == e.keyCode) {				// =+
+				if(!peer) {
+					peerInit();
+				}
+				peerConnect();
+			} else if (189 == e.keyCode) {		// -_
+				videoInit();
+			}
+		}
+		var onMouseDown = function(e) {
+			sync = true;
+		}
+		document.addEventListener("keydown", onKeyDown);
+		document.addEventListener("mousedown", onMouseDown);
+	</script>
+</body>
+</html>
