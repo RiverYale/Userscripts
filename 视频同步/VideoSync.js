@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         VideoSync视频同步播放
-// @description  同步视频播放，在暂停、播放、拖动进度条时会自动进行同步操作
+// @description  远程同步视频播放，在暂停、播放、拖动进度条时会，对方会自动进行同步操作
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
 // @version      1.0
