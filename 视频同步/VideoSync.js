@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         VideoSync视频同步
-// @description  允许用户之间建立连接实现视频同步播放（内嵌的网页视频无法同步）
+// @name         VideoSync视频同步播放
+// @description  同步视频播放，在暂停、播放、拖动进度条时会自动进行同步操作
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
 // @version      1.0
