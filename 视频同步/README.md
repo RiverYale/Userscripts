@@ -21,6 +21,7 @@
 
 # 其他
 - 若出现无法同步的情况请尝试刷新页面
+- 当用户已作为“客户机”时无法“被连接”
 
 [GitHub Pages](https://riveryale.github.io/Userscripts/)
 
