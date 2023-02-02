@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Bangumi快捷播放
-// @description  首页追番卡片显示中文标题，浮动卡片状态实时改变无需刷新，浮动卡片增加对应集数播放源（需手动添加网址格式）
+// @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      2.8
+// @version      2.9
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -19,25 +19,30 @@
 
 var autoMark = true;				// 默认点击链接后自动标记为看过
 var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除，若无需验证则删除引号中的内容
-var src_dict = {
-	"AGE动漫": {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体集数偏移, [集数, 增加偏移]...]
-		pattern: "https://www.agemys.cc/play/${id}?playid=${ch}_${ep}",
-		search: "https://www.agemys.cc/search?query=${keyword}&page=1",
-		326895: [20220092, 2, 0],		// 夏日重现
-		298477: [20200099, 2, 0],		// 来自深渊 烈日的黄金乡
-		316131: [20220129, 2, 0],		// 邪神与厨二病少女 X
-		335389: [20210203, 2, 0],		// OVERLORD IV
-		375817: [20220236, 2, 0],		// 契约之吻
-		364450: [20220142, 2, 0],		// 莉可丽丝
+var src_dict = {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体集数偏移, [集数, 增加偏移]...]
+	"AGE动漫": {
+		pattern: "https://www.agemys.net/play/${id}?playid=${ch}_${ep}",
+		search: "https://www.agemys.net/search?query=${keyword}&page=1",
+		329114: [20220076, 2, 0],		// 想要成为影之实力者
 		339326: [20220134, 2, 0],		// 异世界舅舅
-		326874: [20220001, 2, 1],		// 期待在地下城邂逅有错吗 Ⅳ 新章 迷宫篇
-		315745: [20220002, 2, -12],		// 租借女友 第二季
-		330057: [20210125, 2, 0],		// 打工吧！！魔王大人
-		348240: [20200283, 2, 0],		// 凡人修仙传
 	},
-	"OmoFun": {
-		search: "https://omofun.tv/vod/search.html?wd=${keyword}"
-	}
+    "樱花动漫": {
+		pattern: "http://www.yinghuacd.com/v/${id}-${ep}.html",
+		search: "http://www.yinghuacd.com/search/${keyword}/",
+        329114: [5444, 1, 0],			// 想要成为影之实力者
+		339326: [5531, 1, 0],			// 异世界舅舅
+    },
+	"Bimi": {
+		pattern: "https://www.bimiacg4.net/bangumi/${id}/play/${ch}/${ep}/",
+		search: "https://www.bimiacg4.net/vod/search/wd/${keyword}",
+        329114: [8150, 1, 0],			// 想要成为影之实力者
+	},
+    "新番组": {
+		pattern: "https://bangumi.online",
+		search: "https://bangumi.online",
+        329114: "https://bangumi.online/watch/vb6D7_0qgvtzvkAP-",		// 想要成为影之实力者
+        218708: "https://www.bilibili.com/bangumi/play/ep164970",		// 比宇宙更遥远的地方
+    },
 };
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
@@ -174,7 +179,7 @@ epLinkList.forEach(epLink => {
 			});
 		}
 		isRunUrl(authHref).then(data => {}).catch(data => {
-			$(srcPanel).remove();
+			// $(srcPanel).remove();
 			$(epLink).css({"color":"red"});
 			// $(epLink).css({"color":"#00F", "background-color":"#e0e0e0", "border":"1px solid #b6b6b6"});
 		});
