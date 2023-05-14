@@ -3,14 +3,14 @@
 // @description  远程同步视频播放，在暂停、播放、拖动进度条时会，对方会自动进行同步操作
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      1.0
+// @version      1.1
 // @author       RiverYale
 // @include      *
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAG6SURBVDhPjZM7z0FBEIZfx6EXEhGFQqHVEAoiCqJSqLT8B71GoxGFQiVRqiQ6lc4lKolLonOJEIkGcd3vzFiCRPI9zdmZs+/OzM4shKRerwu/3y9Wq5X0fLJcLkUwGBTNZlN6hFAg2e126Pf7SKVS0vNJMplEr9fDZrORHkCVX1itVng8HrTbbVSrVVgsFlwuFxiNRsxmMwwGA3i9XthsNqkAdNfrVUSjUY5KG0lwv99hMBhwu92g1+txPp+hqiqv6b9WHhqNBtR8Po/xeIxWqwWHw8ECEmslyfO1CDodFEVh8XQ6RSwWQ6FQAKUqyuXy4wb+SbFYFKFQSCh0GkUiFosFut0ur7/pdDrQOsFrTc9laNkoL3E2m0UkEsF+v2f7yXa7RTgcRi6XY5v2cylsSejkw+GA9XotPQ/m8zmOx+Mr8pMP8el0et32O3SJlCod8M6H2OfzwW63w+l0Ss8Dt9vNcxAIBKTngfLsJUE1U4rf0L1QyplMhu3nDChmsxmTyYSd/2U4HMJkMkFNp9NIJBJcp8vl4pp/Qe0ZjUYolUo8YTpqeq1WQ6VS4cdBKf6CAtDM0+OJx+P4A5YgKxpQJCX1AAAAAElFTkSuQmCC
 // @run-at       document-end
-// @require      https://unpkg.com/peerjs@1.4.5/dist/peerjs.min.js
-// @require      https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js
-// @require      https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js
+// @require      https://lib.baomitu.com/peerjs/1.4.5/peerjs.min.js
+// @require      https://lib.baomitu.com/vue/2.7.7/vue.min.js
+// @require      https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js
 // @compatible   chrome
 // @compatible   edge
 // @license      MIT License
@@ -477,7 +477,7 @@ const videoSyncHtml = `
 				<div class="info-row">
 					<div class="info-title">视频捕获：</div>
 					<div class="info-value">{{videoStatusText}}</div>
-					<button v-show="[100,101].indexOf(videoStatus) > -1" class="info-btn" id="videoInitBtn" tip-text="捕获正在播放的视频进行同步">捕获</button>
+					<button class="info-btn" id="videoInitBtn" tip-text="捕获正在播放的视频进行同步">捕获</button>
 				</div>
 			</div>
 			<div v-show="tabIdx == 1" class="connections-panel">
@@ -512,6 +512,7 @@ document.body.appendChild(videoSyncApp);
 		peerIdStatus: 100,
 		connectStatus: 100,
 		videoStatus: 100,
+		activeVideoNum: 0,
 
 		conns: [],
 	},
@@ -519,49 +520,49 @@ document.body.appendChild(videoSyncApp);
 		peerIdStatusText() {
 			switch(this.peerIdStatus) {
 				case 100:
-					return '未获取'
+					return '未获取';
 				case 101:
-					return '获取失败'
+					return '获取失败';
 				case 200:
-					return '获取Peer ID中...'
+					return '获取Peer ID中...';
 				case 300:
-					return peer.id
+					return peer.id;
 				default:
-					return 'Error Status!'
+					return 'Error Status!';
 			}
 		},
 		conStatusText() {
 			switch(this.connectStatus) {
 				case 100:
-					return '未连接'
+					return '未连接';
 				case 101:
-					return '连接失败'
+					return '连接失败';
 				case 102:
-					return '连接已关闭'
+					return '连接已关闭';
 				case 103:
-					return '对方已关闭连接'
+					return '对方已关闭连接';
 				case 104:
-					return '未获取Peer ID'
+					return '未获取Peer ID';
 				case 200:
-					return '连接中...'
+					return '连接中...';
 				case 300:
-					return '已连接（主机）'
+					return '已连接（主机）';
 				case 301:
-					return '已连接（客户机）'
+					return '已连接（客户机）';
 				default:
-					return 'Error Status!'
+					return 'Error Status!';
 			}
 		},
 		videoStatusText() {
 			switch(this.videoStatus) {
 				case 100:
-					return '未捕获'
+					return '未捕获';
 				case 101:
-					return '未找到正在播放的视频'
+					return '未找到正在播放的视频';
 				case 300:
-					return '已捕获'
+					return `已捕获（序号: ${this.activeVideoNum}）`;
 				default:
-					return 'Error Status!'
+					return 'Error Status!';
 			}
 		}
 	},
@@ -575,8 +576,9 @@ document.body.appendChild(videoSyncApp);
 		setConnectStatus(value) {
 			this.connectStatus = value;
 		},
-		setVideoStatus(value) {
+		setVideoStatus(value, num = 0) {
 			this.videoStatus = value;
+			this.activeVideoNum = num;
 		},
 		setConns(value) {
 			this.conns = value;
@@ -636,6 +638,8 @@ var lastPeerId = null;
 
 var syncVideo = null;
 var sync = true;
+var videoNum = 0;
+var activeVideoNum = 0;
 
 new ClipboardJS('#copyBtn', {
 	text: function(trigger) {
@@ -691,23 +695,36 @@ function peerInit() {
 
 function videoInit() {
 	let videos = document.querySelectorAll('video, bwp-video');
+	let playing = false;
 	for(v of videos) {
 		if(!v.paused) {
 			syncVideo = v;
+			playing = true;
 			break;
 		}
 	}
-	// console.log(syncVideo);
-	sync = true;
-	if(!syncVideo) {
+	if(!playing) {
 		setVideoStatus(101)	// 未找到正在播放的视频
+		setTimeout(() => {
+			setVideoStatus(activeVideoNum > 0 ? 300 : 100, activeVideoNum);
+		}, 2000);
 		return;
 	}
-	setVideoStatus(300)	// 已捕获
-
+	// console.log(syncVideo);
+	if(syncVideo.videoNum != undefined) {
+		activeVideoNum = syncVideo.videoNum;
+		setVideoStatus(300, activeVideoNum)	// 已捕获
+		return;
+	}
+	
+	sync = true;
+	videoNum++;
+	activeVideoNum = videoNum;
+	syncVideo.videoNum = videoNum;
+	setVideoStatus(300, activeVideoNum);	// 已捕获
 	syncVideo.addEventListener('play', function(event){
 		// console.log('play', sync, conns.length)
-		if(sync && conns.length > 0) {
+		if(sync && conns.length > 0 && activeVideoNum == event.target.videoNum) {
 			sendData(conns, {
 				command: 'play',
 				currentTime: syncVideo.currentTime
@@ -717,7 +734,7 @@ function videoInit() {
 
 	syncVideo.addEventListener('pause', function(event){
 		// console.log('pause', sync, conns.length)
-		if(sync && conns.length > 0) {
+		if(sync && conns.length > 0 && activeVideoNum == event.target.videoNum) {
 			sendData(conns, {
 				command: 'pause',
 				currentTime: syncVideo.currentTime
@@ -727,7 +744,7 @@ function videoInit() {
 
 	syncVideo.addEventListener('seeked', function(event){
 		// console.log('seeked', sync, conns.length)
-		if(sync && conns.length > 0) {
+		if(sync && conns.length > 0 && activeVideoNum == event.target.videoNum) {
 			sendData(conns, {
 				command: 'seeked',
 				currentTime: syncVideo.currentTime
