@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      3.0
+// @version      3.1
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -21,39 +21,75 @@ var autoMark = true;				// 默认点击链接后自动标记为看过
 var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除，若无需验证则删除引号中的内容
 var src_dict = {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体集数偏移, [集数, 增加偏移]...]
 	"AGE动漫": {
-		pattern: "https://www.agemys.net/play/${id}?playid=${ch}_${ep}",
-		search: "https://www.agemys.net/search?query=${keyword}&page=1",
-		329114: [20220076, 2, 0],		// 想要成为影之实力者
-		339326: [20220134, 2, 0],		// 异世界舅舅
-		330054: [20210126, 2, 0],		// 魔王学院的不适合者 第二季
-		402223: [20230025, 2, -11],		// 期待在地下城邂逅有错吗 Ⅳ 深章 灾厄篇
-		378862: [20220268, 2, 0],		// 别当欧尼酱了！
-		320839: [20220084, 2, -12],		// 虚构推理 第二季
-	},
-	"樱花动漫": {
-		pattern: "https://www.yhdmp.cc/vp/${id}-${ch}-${ep}.html",
-		search: "https://www.yhdmp.cc/s_all?ex=1&kw=${keyword}",
-		329114: [22158, 1, -1],			// 想要成为影之实力者
-		339326: [22216, 1, -1],			// 异世界舅舅
-		330054: [21208, 1, -1],			// 魔王学院的不适合者 第二季
-		402223: [22083, 1, -12],		// 期待在地下城邂逅有错吗 Ⅳ 深章 灾厄篇
-		378862: [22350, 1, -1],			// 别当欧尼酱了！
-		320839: [22166, 1, -13],		// 虚构推理 第二季
+		pattern: "https://www.agemys.vip/play/${id}?playid=${ch}_${ep}",
+		search: "https://www.agemys.vip/search?query=${keyword}&page=1",
+		385209: [20230003, 2, 0],			// 为美好的世界献上爆炎！
+		404804: [20230072, 2, 0],			// 天国大魔境
+		355798: [20220087, 2, 0],			// 总之就是非常可爱 第二季
+		363101: [20220126, 2, 0],			// 新石纪 NEW WORLD
+		369768: [20220203, 2, 0],			// 鬼灭之刃 锻刀村篇
+		403238: [20230078, 2, -12],			// 机动战士高达 水星的魔女 第二季
+		388067: [20230068, 2, 0],			// 我家的英雄
 	},
 	"Bimi": {
 		pattern: "https://www.bimiacg4.net/bangumi/${id}/play/${ch}/${ep}/",
 		search: "https://www.bimiacg4.net/vod/search/wd/${keyword}",
-		329114: [8150, 1, 0],			// 想要成为影之实力者
-		330054: [2783, 1, 0],			// 魔王学院的不适合者 第二季
-		378862: [8227, 1, 0],			// 别当欧尼酱了！
-		320839: [8270, 1, -12],			// 虚构推理 第二季
+		385209: [8549, 1, 0],				// 为美好的世界献上爆炎！
+		404804: [8528, 1, 0],				// 天国大魔境
+		355798: [8558, 1, 0],				// 总之就是非常可爱 第二季
+		363101: [8552, 1, 0],				// 新石纪 NEW WORLD
+		369768: [8564, 1, 0],				// 鬼灭之刃 锻刀村篇
+		403238: [8578, 1, -12],				// 机动战士高达 水星的魔女 第二季
+		388067: [8531, 1, 0],				// 我家的英雄
 	},
-	"新番组": {
-		pattern: "https://bangumi.online",
-		search: "https://bangumi.online",
-		329114: "https://bangumi.online/watch/vb6D7_0qgvtzvkAP-",		// 想要成为影之实力者
-		218708: "https://www.bilibili.com/bangumi/play/ep164970",		// 比宇宙更遥远的地方
+	"MX动漫": {
+		pattern: "http://www.mxdm8.com/dongmanplay/${id}-${ch}-${ep}.html",
+		search: "http://www.mxdm8.com/search/-------------.html?wd=${keyword}",
+		385209: [7610, 1, 0],				// 为美好的世界献上爆炎！
+		404804: [8085, 1, 0],				// 天国大魔境
+		355798: [7112, 1, 0],				// 总之就是非常可爱 第二季
+		363101: [7965, 1, 0],				// 新石纪 NEW WORLD
+		369768: [7426, 1, 0],				// 鬼灭之刃 锻刀村篇
+		403238: [7964, 1, -12],				// 机动战士高达 水星的魔女 第二季
+		388067: [7961, 1, 0],				// 我家的英雄
 	},
+	"橘子动漫": {
+		pattern: "https://www.mgnacg.com/bangumi/${id}-${ch}-${ep}/",
+		search: "https://www.mgnacg.com/search/-------------/?wd=${keyword}",
+		385209: [671, 1, 0],				// 为美好的世界献上爆炎！
+		404804: [782, 1, 0],				// 天国大魔境
+		355798: [678, 1, 0],				// 总之就是非常可爱 第二季
+		// 363101: [580, 1, 0],				// 新石纪 NEW WORLD
+		369768: [789, 1, 0],				// 鬼灭之刃 锻刀村篇
+		403238: [790, 1, -12],				// 机动战士高达 水星的魔女 第二季
+		// 388067: [573, 1, 0],				// 我家的英雄
+	},
+	// "樱花动漫": {
+	// 	pattern: "https://www.vdm8.com/play/${id}-${ch}-${ep}.html",
+	// 	search: "https://www.vdm8.com/search/${keyword}-------------.html",
+	// 	385209: [7526, 1, 0],			// 为美好的世界献上爆炎！
+	// 	404804: [8027, 1, 0],			// 天国大魔境
+	// 	355798: [ 418, 1, 0],			// 总之就是非常可爱 第二季
+	// 	363101: [7890, 1, 0],			// 新石纪 NEW WORLD
+	// 	369768: [  83, 1, 0],			// 鬼灭之刃 锻刀村篇
+	// 	403238: [7889, 1, -12],			// 机动战士高达 水星的魔女 第二季
+	// 	388067: [7894, 1, 0],			// 我家的英雄
+	// },
+	// "宫下动漫": {
+	// 	pattern: "https://arlnigdm.com/vodplay/${id}-${ch}-${ep}.html",
+	// 	search: "https://arlnigdm.com/vodsearch/-------------.html?wd=${keyword}",
+	// 	385209: [553, 1, 0],			// 为美好的世界献上爆炎！
+	// 	404804: [564, 1, 0],			// 天国大魔境
+	// 	355798: [557, 1, 0],			// 总之就是非常可爱 第二季
+	// 	363101: [580, 1, 0],			// 新石纪 NEW WORLD
+	// 	369768: [563, 1, 0],			// 鬼灭之刃 锻刀村篇
+	// 	403238: [560, 1, -12],			// 机动战士高达 水星的魔女 第二季
+	// 	388067: [573, 1, 0],			// 我家的英雄
+	// },
+	// "新番组": {
+	// 	pattern: "https://bangumi.online",
+	// 	search: "https://bangumi.online",
+	// },
 };
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
@@ -95,7 +131,7 @@ titles.forEach(title => {
 
 
 /* 点击链接后是否自动标记为[看过] */
-var _ul = $('<ul style="display: inline-block; float:right;"></ul>');
+var _ul = $('<ul style="display:inline-block; float:right;"></ul>');
 var _label = $('<label style="display:block; margin:10px;"></label>');
 var _input = $('<input type="checkbox" style="vertical-align:middle;">');
 var _span = $('<span style="vertical-align:middle;"> 自动标记</span>');
@@ -125,7 +161,7 @@ var getSrcHref = function(dict, subid, ep) {
 				resEp += value[i][1];
 			}
 		}
-		return pattern.replace(/\$\{id\}/g, resId).replace(/\$\{ch\}/g, resCh).replace(/\$\{ep\}/g, resEp); 
+		return pattern.replace(/\$\{id\}/g, resId).replace(/\$\{ch\}/g, resCh).replace(/\$\{ep\}/g, resEp);
 	} else if(value.constructor == String) {
 		return value;
 	}
@@ -148,10 +184,10 @@ var handleEpLinkList = function(epLink) {
 		if(dict[subid] == undefined) {
 			var subjectName = $(`[data-subject-id=${subid}][class=textTip]`).text();
 			if(dict['search'] == undefined) {
-				$(srcPanel).append(`<a href="javascript:alert('未添加搜索地址格式！');" style="margin-right: 10px;display: inline-block;color: #555">${srcName}(搜索)</a>`);
+				$(srcPanel).append(`<a href="javascript:alert('未添加搜索地址格式！');" style="margin-right:10px; display:inline-block; color:#555; font-style:italic;">${srcName}</a>`);
 			} else {
 				var searchHref = dict['search'].replace(/\$\{keyword\}/g, subjectName)
-				$(srcPanel).append(`<a href="${searchHref}" style="margin-right: 10px;display: inline-block;color: #555" target="_blank">${srcName}(搜索)</a>`);
+				$(srcPanel).append(`<a href="${searchHref}" style="margin-right:10px; display:inline-block; color:#555; font-style:italic;" target="_blank">${srcName}</a>`);
 			}
 			continue;
 		}
