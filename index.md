@@ -3,7 +3,10 @@
 
 - [B站快捷键](https://github.com/RiverYale/Userscripts/tree/main/B%E7%AB%99%E5%BF%AB%E6%8D%B7%E9%94%AE)  
   该脚本为B站视频（video）、番剧（bangumi）、直播（live）页面添加了一些快捷键，虽然B站部分页面提供一些播放的快捷键，但较分散，该脚本进行了调整并添加了新的快捷键。
-  
+
+- [B站快捷键](https://github.com/RiverYale/Userscripts/tree/main/B%E7%AB%99%E5%8A%A8%E6%80%81%E7%82%B9%E8%B5%9E%E8%BF%87%E6%BB%A4)  
+  该脚本作用于B站个人动态页面，可以淡化或者隐藏点赞过的动态。
+
 - [Bangumi快捷播放](https://github.com/RiverYale/Userscripts/tree/main/Bangumi%E5%BF%AB%E6%8D%B7%E6%92%AD%E6%94%BE)  
   该脚本用于Bangumi登陆后，首页追番框中显示中文标题，浮动卡片增加对应集数播放源（需手动添加网址格式），更新剧集状态后自动更新卡片信息
   
