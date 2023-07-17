@@ -5,7 +5,7 @@
 // @homepage     https://riveryale.github.io/Userscripts/
 // @version      0.1
 // @author       RiverYale
-// @match        *://t.bilibili.com/?*
+// @match        *://t.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico?v=1
 // @run-at       document-end
 // @compatible   chrome
