@@ -32,8 +32,8 @@ var src_dict = {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体
 		386809: [20230077, 1, 0],			// 我推的孩子
 	},
 	"Bimi": {
-		pattern: "http://m.dodoge.me//bangumi/${id}/play/${ch}/${ep}/",
-		search: "http://m.dodoge.me//vod/search/wd/${keyword}",
+		pattern: "http://m.dodoge.me/bangumi/${id}/play/${ch}/${ep}/",
+		search: "http://m.dodoge.me/vod/search/wd/${keyword}",
 	},
 	"MX动漫": {
 		pattern: "http://www.mxdm9.com/dongmanplay/${id}-${ch}-${ep}.html",
