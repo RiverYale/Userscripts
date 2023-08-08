@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      3.1
+// @version      3.2
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -18,87 +18,59 @@
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 var autoMark = true;				// 默认点击链接后自动标记为看过
-var authSrc = "AGE动漫";			// 若404则表明未更新资源，全部移除，若无需验证则删除引号中的内容
+var authSrc = "";			// 若404则表明未更新资源，全部移除，若无需验证则删除引号中的内容
 var src_dict = {					// 网址格式，番剧ID: [资源ID, 播放线路, 总体集数偏移, [集数, 增加偏移]...]
 	"AGE动漫": {
-		pattern: "https://www.agemys.vip/play/${id}?playid=${ch}_${ep}",
-		search: "https://www.agemys.vip/search?query=${keyword}&page=1",
-		385209: [20230003, 2, 0],			// 为美好的世界献上爆炎！
-		404804: [20230072, 2, 0],			// 天国大魔境
-		355798: [20220087, 2, 0],			// 总之就是非常可爱 第二季
-		363101: [20220126, 2, 0],			// 新石纪 NEW WORLD
-		369768: [20220203, 2, 0],			// 鬼灭之刃 锻刀村篇
-		403238: [20230078, 2, -12],			// 机动战士高达 水星的魔女 第二季
-		388067: [20230068, 2, 0],			// 我家的英雄
+		pattern: "https://www.agemys.org/play/${id}/${ch}/${ep}",
+		search: "https://www.agemys.org/search?query=${keyword}",
+		373247: [20220248, 1, 1],			// 无职转生：到了异世界就拿出真本事 ~ 第二季
+		441233: [20230154, 1, 0],			// 总之就是非常可爱 女子高中篇
+		376433: [20230138, 1, 0],			// 政宗君的复仇R
+		403225: [20230131, 1, -12],			// 打工吧！！魔王大人 2nd Season
+		376739: [20220244, 1, -87],			// 进击的巨人 最终季 Part.3
+		414461: [20230128, 1, 0],			// 僵尸百分百～变成僵尸之前想做的100件事～
+		386809: [20230077, 1, 0],			// 我推的孩子
 	},
 	"Bimi": {
-		pattern: "https://www.bimiacg4.net/bangumi/${id}/play/${ch}/${ep}/",
-		search: "https://www.bimiacg4.net/vod/search/wd/${keyword}",
-		385209: [8549, 1, 0],				// 为美好的世界献上爆炎！
-		404804: [8528, 1, 0],				// 天国大魔境
-		355798: [8558, 1, 0],				// 总之就是非常可爱 第二季
-		363101: [8552, 1, 0],				// 新石纪 NEW WORLD
-		369768: [8564, 1, 0],				// 鬼灭之刃 锻刀村篇
-		403238: [8578, 1, -12],				// 机动战士高达 水星的魔女 第二季
-		388067: [8531, 1, 0],				// 我家的英雄
+		pattern: "http://m.dodoge.me//bangumi/${id}/play/${ch}/${ep}/",
+		search: "http://m.dodoge.me//vod/search/wd/${keyword}",
 	},
 	"MX动漫": {
-		pattern: "http://www.mxdm8.com/dongmanplay/${id}-${ch}-${ep}.html",
-		search: "http://www.mxdm8.com/search/-------------.html?wd=${keyword}",
-		385209: [7610, 1, 0],				// 为美好的世界献上爆炎！
-		404804: [8085, 1, 0],				// 天国大魔境
-		355798: [7112, 1, 0],				// 总之就是非常可爱 第二季
-		363101: [7965, 1, 0],				// 新石纪 NEW WORLD
-		369768: [7426, 1, 0],				// 鬼灭之刃 锻刀村篇
-		403238: [7964, 1, -12],				// 机动战士高达 水星的魔女 第二季
-		388067: [7961, 1, 0],				// 我家的英雄
+		pattern: "http://www.mxdm9.com/dongmanplay/${id}-${ch}-${ep}.html",
+		search: "http://www.mxdm9.com/search/-------------.html?wd=${keyword}",
+		373247: [8183, 1, 1],				// 无职转生：到了异世界就拿出真本事 ~ 第二季
+		441233: [7112, 1, 12],				// 总之就是非常可爱 女子高中篇
+		376433: [7622, 1, 0],				// 政宗君的复仇R
+		403225: [8181, 1, -12],				// 打工吧！！魔王大人 2nd Season
+		376739: [8049, 1, -87],				// 进击的巨人 最终季 Part.3
+		414461: [8169, 1, 0],				// 僵尸百分百～变成僵尸之前想做的100件事～
+		386809: [7963, 1, 0],				// 我推的孩子
 	},
 	"橘子动漫": {
 		pattern: "https://www.mgnacg.com/bangumi/${id}-${ch}-${ep}/",
 		search: "https://www.mgnacg.com/search/-------------/?wd=${keyword}",
-		385209: [671, 1, 0],				// 为美好的世界献上爆炎！
-		404804: [782, 1, 0],				// 天国大魔境
-		355798: [678, 1, 0],				// 总之就是非常可爱 第二季
-		// 363101: [580, 1, 0],				// 新石纪 NEW WORLD
-		369768: [789, 1, 0],				// 鬼灭之刃 锻刀村篇
-		403238: [790, 1, -12],				// 机动战士高达 水星的魔女 第二季
-		// 388067: [573, 1, 0],				// 我家的英雄
 	},
-	// "樱花动漫": {
-	// 	pattern: "https://www.vdm8.com/play/${id}-${ch}-${ep}.html",
-	// 	search: "https://www.vdm8.com/search/${keyword}-------------.html",
-	// 	385209: [7526, 1, 0],			// 为美好的世界献上爆炎！
-	// 	404804: [8027, 1, 0],			// 天国大魔境
-	// 	355798: [ 418, 1, 0],			// 总之就是非常可爱 第二季
-	// 	363101: [7890, 1, 0],			// 新石纪 NEW WORLD
-	// 	369768: [  83, 1, 0],			// 鬼灭之刃 锻刀村篇
-	// 	403238: [7889, 1, -12],			// 机动战士高达 水星的魔女 第二季
-	// 	388067: [7894, 1, 0],			// 我家的英雄
-	// },
-	// "宫下动漫": {
-	// 	pattern: "https://arlnigdm.com/vodplay/${id}-${ch}-${ep}.html",
-	// 	search: "https://arlnigdm.com/vodsearch/-------------.html?wd=${keyword}",
-	// 	385209: [553, 1, 0],			// 为美好的世界献上爆炎！
-	// 	404804: [564, 1, 0],			// 天国大魔境
-	// 	355798: [557, 1, 0],			// 总之就是非常可爱 第二季
-	// 	363101: [580, 1, 0],			// 新石纪 NEW WORLD
-	// 	369768: [563, 1, 0],			// 鬼灭之刃 锻刀村篇
-	// 	403238: [560, 1, -12],			// 机动战士高达 水星的魔女 第二季
-	// 	388067: [573, 1, 0],			// 我家的英雄
-	// },
-	// "新番组": {
-	// 	pattern: "https://bangumi.online",
-	// 	search: "https://bangumi.online",
-	// },
+	"樱花动漫": {
+		pattern: "https://www.vdm8.com/play/${id}-${ch}-${ep}.html",
+		search: "https://www.vdm8.com/search/${keyword}-------------.html",
+	},
+	"宫下动漫": {
+		pattern: "https://arlnigdm.com/vodplay/${id}-${ch}-${ep}.html",
+		search: "https://arlnigdm.com/vodsearch/-------------.html?wd=${keyword}",
+	},
+	"新番组": {
+		pattern: "https://bangumi.online",
+		search: "https://bangumi.online",
+	},
 };
 /*================= 更新脚本前注意保存自己修改的内容！ =================*/
 
 if($(".loginPanel").length == 1) return;
 
 /* 标题中日文对调 */
-var titles = Array.from($(".tinyHeader .textTip:not(.prgCheckIn)"))		// 平铺模式
+var titles_A = Array.from($(".tinyHeader .textTip:not(.prgCheckIn)"))		// 平铺模式
 	.concat(Array.from($(".l.textTip")))		// 列表模式右侧
-if(titles.length == 0) return;
+if(titles_A.length == 0) return;
 var handleTitle_A = function(title) {
 	var text = $(title).text();
 	var data_original_title = $(title).attr("data-original-title");
@@ -108,10 +80,8 @@ var handleTitle_A = function(title) {
 	$(title).text(data_original_title);
 	$(title).attr("data-original-title", text);
 }
-titles.forEach(title => {
-	setTimeout(handleTitle_A, 500, title);
-});
-titles = Array.from($(".subjectItem.title.textTip"))		// 列表模式左侧 - 1, 2, 3
+
+var titles_B = Array.from($(".subjectItem.title.textTip"))		// 列表模式左侧 - 1, 2, 3
 var handleTitle_B = function(title) {
 	var text = $(title).find('span').text();
 	var data_original_title = $(title).attr("data-original-title");
@@ -125,9 +95,6 @@ var handleTitle_B = function(title) {
 	var preALink_title = $(preALink).attr('data-original-title');
 	$(preALink).attr('data-original-title', preALink_title.replace(text, data_original_title));
 }
-titles.forEach(title => {
-	setTimeout(handleTitle_B, 750, title);
-});
 
 
 /* 点击链接后是否自动标记为[看过] */
@@ -234,9 +201,6 @@ var handleEpLinkList = function(epLink) {
 		});
 	}
 }
-epLinkList.forEach(epLink => {
-	setTimeout(handleEpLinkList, 1000, epLink);
-});
 
 
 // 根据状态更新单集进度情况面板
@@ -306,13 +270,16 @@ var handleprgList = function(prg) {
 	$(".epStatusTool a", prg).click((event) => {
 		var type = event.currentTarget.innerText;
 		if(type == '看到') {
-			updataEpStatusTool(prg, "看过");
 			var offset = Number($(prg).attr("ep_offset"));
 			var curI = $(prg).index();
-			for(let i=curI-offset; i<curI; i++) {
-				if($(".epStatusTool p", prgList[i]).text() != '抛弃'){
-					updataEpStatusTool(prgList[i], "看过");
+			while(curI >= 0 && offset >= 0) {
+				if (offset == Number($(prgList[curI]).attr("ep_offset"))) {
+					if ($(".epStatusTool p", prgList[curI]).text() != '抛弃') {
+						updataEpStatusTool(prgList[curI], "看过");
+					}
+					offset -= 1;
 				}
+				curI -= 1;
 			}
 		} else {
 			updataEpStatusTool(prg, type);
@@ -326,6 +293,69 @@ var handleprgList = function(prg) {
 		return false;
 	})
 }
-prgList.forEach(prg => {
-	setTimeout(handleprgList, 1500, prg);
+
+
+/* 功能运行进度指示文本 */
+class Task {
+	constructor(func, ...args) {
+		this.func = func;
+		this.args = args;
+		this.delayMillsec = 0;
+	}
+	delay(millsec) {
+		if (millsec) this.delayMillsec = millsec;
+		return this.delayMillsec;
+	}
+	execute() {
+		return this.func(...this.args);
+	}
+}
+
+var taskList = [];
+titles_A.forEach(title => {
+	taskList.push(new Task(handleTitle_A, title));
 });
+titles_B.forEach(title => {
+	taskList.push(new Task(handleTitle_B, title));
+});
+epLinkList.forEach(epLink => {
+	taskList.push(new Task(handleEpLinkList, epLink));
+});
+prgList.forEach(prg => {
+	taskList.push(new Task(handleprgList, prg));
+});
+
+var _progressUl = $('<ul style="display:inline-block; float:right; padding:10px"></ul>');
+var _progressSpan = $('<span style="vertical-align:middle;">处理中...0%</span>');
+if (taskList.length > 0) {
+	$("#prgManagerHeader").append(_progressUl);
+	$(_progressUl).append(_progressSpan);
+	$(_progressSpan).attr("maxVal", taskList.length);
+	$(_progressSpan).attr("curVal", 0);
+}
+
+var incProgress = function(val = 1) {
+	let maxVal = Number($(_progressSpan).attr("maxVal"));
+	let curVal = Number($(_progressSpan).attr("curVal"));
+	curVal = Math.max(0, Math.min(curVal + val, maxVal));
+	let progress = Math.round(curVal / maxVal * 100);
+	$(_progressSpan).attr("curVal", curVal);
+	$(_progressSpan).text(`处理中...${progress}%`);
+	if (curVal == maxVal) {
+		setTimeout(() => {
+			$(_progressUl).css("transition", "0.5s ease");
+			$(_progressUl).css("color", "rgba(0, 0, 0, 0)");
+		}, 1000);
+	}
+}
+
+var executor = function(taskList) {
+	if (!taskList || taskList.length < 1) return;
+	var task = taskList.shift();
+	setTimeout(() => {
+		task.execute();
+		incProgress();
+		executor(taskList);
+	}, task.delay());
+}
+executor(taskList);
