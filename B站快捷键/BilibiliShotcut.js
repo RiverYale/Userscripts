@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.0
+// @version      5.1
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -61,6 +61,10 @@ if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 	pageType = 3;
 }
 
+
+const LIVE_TOOLS_LEFT = ".left-area.svelte-koac9q .icon";
+const LIVE_TOOLS_RIGHT = ".right-area.svelte-koac9q .icon";
+
 function danmuToggle() {
 	switch (pageType) {
 		case 0:
@@ -75,7 +79,7 @@ function danmuToggle() {
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".right-area.svelte-1dsiks1 .icon")[3].click()
+			document.querySelectorAll(LIVE_TOOLS_RIGHT)[3].click()
 			break;
 	}
 }
@@ -133,7 +137,7 @@ function fullScreenToggle() {
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".right-area.svelte-1dsiks1 .icon")[0].click()
+			document.querySelectorAll(LIVE_TOOLS_RIGHT)[0].click()
 			break;
 	}
 }
@@ -150,7 +154,7 @@ function wideScreenToggel() {
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".right-area.svelte-1dsiks1 .icon")[1].click()
+			document.querySelectorAll(LIVE_TOOLS_RIGHT)[1].click()
 			break;
 	}
 }
@@ -232,7 +236,7 @@ function restart() {
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".left-area.svelte-1dsiks1 .icon")[1].click()
+			document.querySelectorAll(LIVE_TOOLS_LEFT)[1].click()
 			break;
 	}
 }
@@ -247,7 +251,7 @@ function livePause(e) {
 			e.preventDefault();
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".left-area.svelte-1dsiks1 .icon")[0].click()
+			document.querySelectorAll(LIVE_TOOLS_LEFT)[0].click()
 			break;
 	}
 }
@@ -289,7 +293,7 @@ function liveMutedToggle(e) {
 			e.preventDefault();
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
-			document.querySelectorAll(".left-area.svelte-1dsiks1 .icon")[2].click()
+			document.querySelectorAll(LIVE_TOOLS_LEFT)[2].click()
 			break;
 	}
 }
