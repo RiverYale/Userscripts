@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.1
+// @version      5.2
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -62,8 +62,8 @@ if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 }
 
 
-const LIVE_TOOLS_LEFT = ".left-area.svelte-koac9q .icon";
-const LIVE_TOOLS_RIGHT = ".right-area.svelte-koac9q .icon";
+const LIVE_TOOLS_LEFT = ".left-area .icon";
+const LIVE_TOOLS_RIGHT = ".right-area .icon";
 
 function danmuToggle() {
 	switch (pageType) {
