@@ -54,7 +54,7 @@
 			user-select: none;
 			filter: drop-shadow(5px 5px 7px rgb(0 0 0 / 25%));
 			z-index: 4000;
-			transition: all .2s;
+			transition: right .2s;
 		}
 		.app-off {
 			right: -400px;
@@ -126,6 +126,7 @@
 			text-align: right;
 			font-size: 14px;
 			line-height: 25px;
+			color: black;
 		}
 		.info-value {
 			flex: 1;
@@ -135,6 +136,7 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			padding: 0 10px 0 5px;
+			color: black;
 		}
 		.info-btn {
 			font-size: 13px;
@@ -173,6 +175,7 @@
 			display: flex;
 			flex-direction: column;
 			height: 160px;
+			color: black;
 		}
 		.connections-panel .conn-row:nth-child(odd){
 			background-color: rgba(0, 0, 0, 0.04);
@@ -745,6 +748,15 @@
 		if(appSwitchDrag) {
 			appSwitch.click()
 		}
+	})
+
+	document.querySelectorAll("iframe").forEach(function(value, index, array){
+        var sandbox = value.sandbox.value;
+        if(sandbox.length > 5){
+            if(this.sandbox.value.indexOf("allow-modals") == -1){
+                this.sandbox += ' allow-modals';
+            }
+        }
 	})
 </script>
 <script>

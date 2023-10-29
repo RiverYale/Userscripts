@@ -3,7 +3,7 @@
 // @description  远程同步视频播放，在暂停、播放、拖动进度条时会，对方会自动进行同步操作
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      1.1
+// @version      1.2
 // @author       RiverYale
 // @include      *
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAG6SURBVDhPjZM7z0FBEIZfx6EXEhGFQqHVEAoiCqJSqLT8B71GoxGFQiVRqiQ6lc4lKolLonOJEIkGcd3vzFiCRPI9zdmZs+/OzM4shKRerwu/3y9Wq5X0fLJcLkUwGBTNZlN6hFAg2e126Pf7SKVS0vNJMplEr9fDZrORHkCVX1itVng8HrTbbVSrVVgsFlwuFxiNRsxmMwwGA3i9XthsNqkAdNfrVUSjUY5KG0lwv99hMBhwu92g1+txPp+hqiqv6b9WHhqNBtR8Po/xeIxWqwWHw8ECEmslyfO1CDodFEVh8XQ6RSwWQ6FQAKUqyuXy4wb+SbFYFKFQSCh0GkUiFosFut0ur7/pdDrQOsFrTc9laNkoL3E2m0UkEsF+v2f7yXa7RTgcRi6XY5v2cylsSejkw+GA9XotPQ/m8zmOx+Mr8pMP8el0et32O3SJlCod8M6H2OfzwW63w+l0Ss8Dt9vNcxAIBKTngfLsJUE1U4rf0L1QyplMhu3nDChmsxmTyYSd/2U4HMJkMkFNp9NIJBJcp8vl4pp/Qe0ZjUYolUo8YTpqeq1WQ6VS4cdBKf6CAtDM0+OJx+P4A5YgKxpQJCX1AAAAAElFTkSuQmCC
@@ -30,7 +30,7 @@ const videoSyncCss = `
 	user-select: none;
 	filter: drop-shadow(5px 5px 7px rgb(0 0 0 / 25%));
 	z-index: 4000;
-	transition: all .2s;
+	transition: right .2s;
 }
 .app-off {
 	right: -400px;
@@ -102,6 +102,7 @@ const videoSyncCss = `
 	text-align: right;
 	font-size: 14px;
 	line-height: 25px;
+	color: black;
 }
 .info-value {
 	flex: 1;
@@ -111,6 +112,7 @@ const videoSyncCss = `
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	padding: 0 10px 0 5px;
+	color: black;
 }
 .info-btn {
 	font-size: 13px;
@@ -149,6 +151,7 @@ const videoSyncCss = `
 	display: flex;
 	flex-direction: column;
 	height: 160px;
+	color: black;
 }
 .connections-panel .conn-row:nth-child(odd){
 	background-color: rgba(0, 0, 0, 0.04);
@@ -624,6 +627,14 @@ appSwitch.addEventListener('mouseup', function(e) {
 	if(appSwitchDrag) {
 		appSwitch.click()
 	}
+})
+
+document.querySelectorAll("iframe").forEach(function(value, index, array){
+	var sandboxV = value.sandbox.value;
+	if(sandboxV.indexOf("allow-modals") == -1){
+		value.sandbox.value += (sandboxV.length > 0 ? ' ' : '') + 'allow-modals';
+	}
+	value.src = value.src;
 })
 
 
