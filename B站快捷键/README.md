@@ -26,10 +26,15 @@
 ```
 if (17 == e.keyCode) {        // Ctrl 弹幕开关
 	danmuToggle();
-} 
+} else if (e.shiftKey && 76 == e.keyCode) {		// shift + L 画面占比调整，组合键使用
+    videoScale();
+}
 ```
 ![keyCode对照表](https://riveryale.github.io/Userscripts/assets/pic/BilibiliShortcut/keyCode.png)  
+
 [查看数据来源](http://www.phpweblog.net/kiyone/archive/2007/04/19/1138.html)
+
+[Js按键编码查看工具](https://www.toptal.com/developers/keycode)
 
 <br/>
 
