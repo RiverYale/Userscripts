@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.2
+// @version      5.3
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -21,11 +21,11 @@
 
 var onKeyDown = function (e) {
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
-		danmuToggle();
+		danmuToggle(e);
 	} else if (76 == e.keyCode) {		// L 画面占比调整
 		videoScale();
 	} else if (191 == e.keyCode) {		// /? 全屏
-		fullScreenToggle();
+		fullScreenToggle(e);
 	} else if (222 == e.keyCode) {		// '" 宽屏
 		wideScreenToggel();
 	} else if (188 == e.keyCode) {		// ,< 减速
@@ -33,7 +33,7 @@ var onKeyDown = function (e) {
 	} else if (190 == e.keyCode) {		// .> 加速
 		speedAdjust("up");
 	} else if (186 == e.keyCode) {		// ;: 视频结束后重播，直播时刷新
-		restart();
+		restart(e);
 	} else if (32 == e.keyCode) {		// Space 直播时暂停
 		livePause(e);
 	} else if (38 == e.keyCode) {		// ↑键 直播时音量+
@@ -65,13 +65,15 @@ if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 const LIVE_TOOLS_LEFT = ".left-area .icon";
 const LIVE_TOOLS_RIGHT = ".right-area .icon";
 
-function danmuToggle() {
+function danmuToggle(e) {
 	switch (pageType) {
 		case 0:
 		case 1:
 		case 2:
-			fireKeyEvent(document.querySelector('body'), 'keydown', 68);
-			fireKeyEvent(document.querySelector('body'), 'keyup', 68);
+			if (e.keyCode != 68) {
+				fireKeyEvent(document.querySelector('body'), 'keydown', 68);
+				fireKeyEvent(document.querySelector('body'), 'keyup', 68);
+			}
 			break;
 		// case 2:
 		// 	document.querySelectorAll('[aria-label="弹幕显示隐藏"] .bui-switch-input')[0].click();
@@ -123,13 +125,15 @@ function videoScale() {
 	video.style.height = width + '%';
 }
 
-function fullScreenToggle() {
+function fullScreenToggle(e) {
 	switch (pageType) {
 		case 0:
 		case 1:
 		case 2:
-			fireKeyEvent(document.querySelector('body'), 'keydown', 70);
-			fireKeyEvent(document.querySelector('body'), 'keyup', 70);
+			if (e.keyCode != 70) {
+				fireKeyEvent(document.querySelector('body'), 'keydown', 70);
+				fireKeyEvent(document.querySelector('body'), 'keyup', 70);
+			}
 			break;
 		// case 2:
 			// document.querySelector(".squirtle-fullscreen-wrap").children[0].click();
@@ -193,7 +197,7 @@ function speedAdjust(upOrDown) {
 	}
 }
 
-function restart() {
+function restart(e) {
 	switch (pageType) {
 		case 0:
 		case 1:
@@ -219,8 +223,10 @@ function restart() {
 			var restartIcon = document.querySelector(".restart");
 			if (endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
 				if(restartIcon == null) {
-					fireKeyEvent(document.querySelector('body'), 'keydown', 32);
-					fireKeyEvent(document.querySelector('body'), 'keyup', 32);
+					if (e.keyCode != 32) {
+						fireKeyEvent(document.querySelector('body'), 'keydown', 32);
+						fireKeyEvent(document.querySelector('body'), 'keyup', 32);
+					}
 				} else {
 					restartIcon.click();
 				}
