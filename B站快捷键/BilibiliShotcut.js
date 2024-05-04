@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.3
+// @version      5.4
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -70,7 +70,7 @@ function danmuToggle(e) {
 		case 0:
 		case 1:
 		case 2:
-			if (e.keyCode != 68) {
+			if (e.keyCode != 68 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
 				fireKeyEvent(document.querySelector('body'), 'keydown', 68);
 				fireKeyEvent(document.querySelector('body'), 'keyup', 68);
 			}
@@ -130,7 +130,7 @@ function fullScreenToggle(e) {
 		case 0:
 		case 1:
 		case 2:
-			if (e.keyCode != 70) {
+			if (e.keyCode != 70 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
 				fireKeyEvent(document.querySelector('body'), 'keydown', 70);
 				fireKeyEvent(document.querySelector('body'), 'keyup', 70);
 			}
@@ -223,7 +223,7 @@ function restart(e) {
 			var restartIcon = document.querySelector(".restart");
 			if (endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
 				if(restartIcon == null) {
-					if (e.keyCode != 32) {
+					if (e.keyCode != 32 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
 						fireKeyEvent(document.querySelector('body'), 'keydown', 32);
 						fireKeyEvent(document.querySelector('body'), 'keyup', 32);
 					}
