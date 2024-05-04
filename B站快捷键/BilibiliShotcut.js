@@ -252,6 +252,10 @@ function livePause(e) {
 		case 0:
 		case 1:
 		case 2:
+			if (e.keyCode != 32 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
+				fireKeyEvent(document.querySelector('body'), 'keydown', 32);
+				fireKeyEvent(document.querySelector('body'), 'keyup', 32);
+			}
 			break;
 		case 3:
 			e.preventDefault();
@@ -267,6 +271,17 @@ function liveVolumeAdjust(e, upOrDown) {
 		case 0:
 		case 1:
 		case 2:
+			if ("up" == upOrDown) {
+				if (e.keyCode != 38 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
+					fireKeyEvent(document.querySelector('body'), 'keydown', 38);
+					fireKeyEvent(document.querySelector('body'), 'keyup', 38);
+				}
+			} else if ("down" == upOrDown) {
+				if (e.keyCode != 40 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
+					fireKeyEvent(document.querySelector('body'), 'keydown', 40);
+					fireKeyEvent(document.querySelector('body'), 'keyup', 40);
+				}
+			}
 			break;
 		case 3:
 			e.preventDefault();
@@ -294,6 +309,10 @@ function liveMutedToggle(e) {
 		case 0:
 		case 1:
 		case 2:
+			if (e.keyCode != 77 || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) {
+				fireKeyEvent(document.querySelector('body'), 'keydown', 77);
+				fireKeyEvent(document.querySelector('body'), 'keyup', 77);
+			}
 			break;
 		case 3:
 			e.preventDefault();
