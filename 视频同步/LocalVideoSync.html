@@ -37,6 +37,15 @@
 			background-color: rgb(255, 64, 129, 0.9);
 			box-shadow: 0 3px 5px -1px rgb(0 0 0 / 20%), 0 6px 10px 0 rgb(0 0 0 / 14%), 0 1px 18px 0 rgb(0 0 0 / 12%);
 		}
+		.artplayer-title{
+			position: absolute;
+			width: 80vw;
+			height: 1em;
+			text-align: center;
+			left: calc(50% - 40vw);
+			top: calc(50% - 40vh - 2em);
+			display: none;
+		}
 		.artplayer-app {
 			position: absolute;
 			width: 80vw;
@@ -199,8 +208,9 @@
 	</style>
 </head>
 <body class="mdui-theme-accent-blue">
-	<input type="file" id="videoFileInput" accept=".mp4,.ogg,.webm" onchange="videoFileInput()"> 
+	<input type="file" id="videoFileInput" accept=".mp4,.ogg,.webm,.mkv" onchange="videoFileInput()"> 
 	<input type="file" id="subtitleFileInput" accept=".vtt,.srt,.ass" onchange="subtitleFileInput()">
+	<div class="artplayer-title">视频标题</div>
 	<div class="artplayer-app"></div>
 	<button id="initBtn" onclick="init()" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">选择播放文件</button>
 	<div id="sync-app">
@@ -525,13 +535,16 @@
 		var file = document.getElementById('videoFileInput').files[0];
 		var url = URL.createObjectURL(file);
 		var title = file.name.substr(0, file.name.lastIndexOf('.'));
+
+		var videoTitle = document.getElementsByClassName('artplayer-title')[0]
+		videoTitle.innerText = title;
+		videoTitle.style.display = 'block';
 		if(art) {
-			art.switchUrl(url, title)
+			art.switchUrl(url);
 		} else {
 			art = new Artplayer({
 				container: '.artplayer-app',
 				url: url,
-				title: title,
 				volume: 1.0,
 				muted: false,
 				autoplay: false,
@@ -578,11 +591,6 @@
 					encoding: 'utf-8',
 				},
 				controls: [
-					{
-						position: 'right',
-						tooltip: 'Meitantei.Conan.Hiiro.no.dangan.2021.BluRay.1080p.TrueHD5.1.x265.10bit-SuperMiao',
-						html: '<span style="margin:0 8px;">当前标题</span>',
-					},
 					{
 						position: 'right',
 						html: '<span style="margin:0 8px;">更换视频</span>',
