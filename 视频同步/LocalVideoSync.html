@@ -586,9 +586,10 @@
 					type: '',
 					style: {
 						color: '#ffffff',
-						fontSize: '25px',
+						fontSize: '40px',
+						paddingBottom: '20px'
 					},
-					encoding: 'utf-8',
+					encoding: 'utf-8',		// utf-8 | gbk
 				},
 				controls: [
 					{
@@ -602,7 +603,7 @@
 					{
 						position: 'right',
 						html: '<span style="margin:0 8px;">加载字幕</span>',
-						tooltip: '选择需要加载的本地字幕',
+						tooltip: '选择需要加载的本地字幕（UTF-8）',
 						click: function () {
 							document.getElementById('subtitleFileInput').click();  
 						},
@@ -622,7 +623,7 @@
 		if(art) {
 			art.subtitle.switch(url, {
 				name: name,
-				type: type
+				type: type,
 			});
 		} else {
 			console.log('no video initialized')
