@@ -3,7 +3,7 @@
 // @description  远程同步视频播放，在暂停、播放、拖动进度条时会，对方会自动进行同步操作
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      1.2
+// @version      1.3
 // @author       RiverYale
 // @include      *
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAG6SURBVDhPjZM7z0FBEIZfx6EXEhGFQqHVEAoiCqJSqLT8B71GoxGFQiVRqiQ6lc4lKolLonOJEIkGcd3vzFiCRPI9zdmZs+/OzM4shKRerwu/3y9Wq5X0fLJcLkUwGBTNZlN6hFAg2e126Pf7SKVS0vNJMplEr9fDZrORHkCVX1itVng8HrTbbVSrVVgsFlwuFxiNRsxmMwwGA3i9XthsNqkAdNfrVUSjUY5KG0lwv99hMBhwu92g1+txPp+hqiqv6b9WHhqNBtR8Po/xeIxWqwWHw8ECEmslyfO1CDodFEVh8XQ6RSwWQ6FQAKUqyuXy4wb+SbFYFKFQSCh0GkUiFosFut0ur7/pdDrQOsFrTc9laNkoL3E2m0UkEsF+v2f7yXa7RTgcRi6XY5v2cylsSejkw+GA9XotPQ/m8zmOx+Mr8pMP8el0et32O3SJlCod8M6H2OfzwW63w+l0Ss8Dt9vNcxAIBKTngfLsJUE1U4rf0L1QyplMhu3nDChmsxmTyYSd/2U4HMJkMkFNp9NIJBJcp8vl4pp/Qe0ZjUYolUo8YTpqeq1WQ6VS4cdBKf6CAtDM0+OJx+P4A5YgKxpQJCX1AAAAAElFTkSuQmCC
@@ -500,6 +500,13 @@ let videoSyncDoc = new DOMParser().parseFromString(videoSyncHtml, 'text/html');
 let videoSyncApp = videoSyncDoc.querySelector('#sync-app');
 document.body.appendChild(videoSyncStyle);
 document.body.appendChild(videoSyncApp);
+
+let iframes = document.querySelectorAll('iframe');
+iframes.forEach((item) => {
+	item.sandbox.add('allow-scripts');
+	item.sandbox.add('allow-same-origin');
+	item.src = item.src;
+})
 
 
 /**
