@@ -20,6 +20,17 @@
 /*================== 更新脚本前注意保存自己修改的内容！ ==================*/
 
 var onKeyDown = function (e) {
+	if (pageType == 3) {
+		var activeInput = document.activeElement
+		if (activeInput == document.querySelector(".chat-input-new > textarea")
+			|| activeInput == document.querySelector(".fullscreen-danmaku .chat-input")) {
+			if (27 == e.keyCode) {     // Esc
+				activeInput.blur()
+			} else {
+				return
+			}
+		}
+	}
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
 		danmuToggle(e);
 	} else if (76 == e.keyCode) {		// L 画面占比调整
@@ -42,6 +53,10 @@ var onKeyDown = function (e) {
 		liveVolumeAdjust(e, "down");
 	} else if (77 == e.keyCode) {		// M键 静音开关
 		liveMutedToggle(e);
+	} else if (81 == e.keyCode) {		// Q 直播选择最高画质
+		qualitySelect()
+	} else if (83 == e.keyCode) {		// S 直播弹幕侧边栏
+		sliderToggle()
 	}
 }
 document.addEventListener("keydown", onKeyDown);
@@ -321,6 +336,24 @@ function liveMutedToggle(e) {
 			document.querySelectorAll(LIVE_TOOLS_LEFT)[2].click()
 			break;
 	}
+}
+
+function sliderToggle() {
+	if (pageType != 3) {
+		return
+	}
+	document.querySelector("#aside-area-toggle-btn").click();
+}
+
+function qualitySelect() {
+	if (pageType != 3) {
+		return
+	}
+	var video = document.querySelector("video");
+	imitataMouseMove(video, 0, 0);
+	var wrapElement = document.querySelector(".quality-wrap")
+	imitateMouseClick('mouseenter', wrapElement, 0, 0)
+	setTimeout(() => document.querySelectorAll(".quality-wrap > .panel > .list-it")[0].click(), 100)
 }
 
 /* 鼠标按键事件模拟 */
