@@ -21,10 +21,11 @@
 
 var onKeyDown = function (e) {
 	if (pageType == 3) {
+        // 处理键入弹幕输入框时按键冲突
 		var activeInput = document.activeElement
 		if (activeInput == document.querySelector(".chat-input-new > textarea")
 			|| activeInput == document.querySelector(".fullscreen-danmaku .chat-input")) {
-			if (27 == e.keyCode) {     // Esc
+			if (27 == e.keyCode) {     // Esc 键
 				activeInput.blur()
 			} else {
 				return
@@ -54,8 +55,8 @@ var onKeyDown = function (e) {
 	} else if (77 == e.keyCode) {		// M键 静音开关
 		liveMutedToggle(e);
 	} else if (81 == e.keyCode) {		// Q 直播选择最高画质
-		qualitySelect()
-	} else if (83 == e.keyCode) {		// S 直播弹幕侧边栏
+		bestQualitySelect()
+	} else if (83 == e.keyCode) {		// S 直播宽屏模式下切换弹幕侧边栏
 		sliderToggle()
 	}
 }
@@ -345,7 +346,7 @@ function sliderToggle() {
 	document.querySelector("#aside-area-toggle-btn").click();
 }
 
-function qualitySelect() {
+function bestQualitySelect() {
 	if (pageType != 3) {
 		return
 	}
