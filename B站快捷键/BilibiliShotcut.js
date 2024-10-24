@@ -123,6 +123,9 @@ function videoScale() {
 	width = (width + 75) % 100 + 25;
 	video.style.width = width + '%';
 	video.style.height = `calc(${width}% - ${toolBarHeight})`;
+	if (width == 100) {
+		document.querySelector('#videoScaleStyle').remove();
+	}
 }
 
 function fullScreenToggle(e) {
