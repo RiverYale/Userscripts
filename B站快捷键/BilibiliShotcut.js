@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.5
+// @version      5.6
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
