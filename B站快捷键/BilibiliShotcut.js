@@ -3,7 +3,7 @@
 // @description  B站播放视频或直播时可用的快捷键，直接使用键盘操作，比鼠标更便捷
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      5.4
+// @version      5.5
 // @author       RiverYale
 // @match        *://www.bilibili.com/video/*
 // @match        *://www.bilibili.com/bangumi/*
@@ -20,17 +20,8 @@
 /*================== 更新脚本前注意保存自己修改的内容！ ==================*/
 
 var onKeyDown = function (e) {
-	if (pageType == 3) {
-        // 处理键入弹幕输入框时按键冲突
-		var activeInput = document.activeElement
-		if (activeInput == document.querySelector(".chat-input-new > textarea")
-			|| activeInput == document.querySelector(".fullscreen-danmaku .chat-input")) {
-			if (27 == e.keyCode) {     // Esc 键
-				activeInput.blur()
-			} else {
-				return
-			}
-		}
+	if (isOnTyping(e)) {				// 判断是否正在输入
+		return;
 	}
 	if (17 == e.keyCode) {				// Ctrl 弹幕开关
 		danmuToggle(e);
@@ -81,6 +72,15 @@ if (document.URL.indexOf("https://www.bilibili.com/video") >= 0) {
 const LIVE_TOOLS_LEFT = ".left-area .icon";
 const LIVE_TOOLS_RIGHT = ".right-area .icon";
 
+function isOnTyping(e) {
+	const target = e.target;
+	if (target.readOnly) {
+		return false;
+	}
+	return (target.tagName.toLowerCase() == "input" && ["text", "password"].indexOf(target.type) > -1)
+			|| target.tagName.toLowerCase() == "textarea"
+}
+
 function danmuToggle(e) {
 	switch (pageType) {
 		case 0:
@@ -91,9 +91,6 @@ function danmuToggle(e) {
 				fireKeyEvent(document.querySelector('body'), 'keyup', 68);
 			}
 			break;
-		// case 2:
-		// 	document.querySelectorAll('[aria-label="弹幕显示隐藏"] .bui-switch-input')[0].click();
-		// 	break;
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
@@ -103,33 +100,17 @@ function danmuToggle(e) {
 }
 
 function videoScale() {
-	var video;
-	switch (pageType) {
-		case 0:
-		case 1:
-			// var video_wrapper = document.querySelector(".bilibili-player-video");
-			// video_wrapper.style.justifyContent = 'center';
-			// video_wrapper.style.alignItems = 'center';
-			// video = video_wrapper.children[0];
-			// if (video_wrapper.children.length < 2) {
-			// 	var style_node = document.createElement('style');
-			// 	style_node.innerHTML = 'bwp-video { height: 100%; }';
-			// 	video_wrapper.appendChild(style_node);
-			// }
-			// break;
-		case 2:
-			var video_wrapper = document.querySelector(".bpx-player-video-wrap");
-			video_wrapper.style.display = 'flex';
-			video_wrapper.style.justifyContent = 'center';
-			video_wrapper.style.alignItems = 'center';
-			video = video_wrapper.children[0];
-			break;
-		case 3:
-			video = document.querySelector("video");
-			video.style.bottom = '0';
-			video.style.right = '0';
-			video.style.margin = 'auto';
-			break;
+	var video = document.querySelector("video");
+	var videoWrapper = video.parentElement;
+	videoWrapper.style.display = 'flex';
+	videoWrapper.style.justifyContent = 'center';
+	videoWrapper.style.alignItems = 'center';
+
+	if (null == document.querySelector('#videoScaleStyle')) {
+		var cssStyle = document.createElement('style');
+		cssStyle.id = 'videoScaleStyle';
+		cssStyle.innerHTML = "video,canvas{top:0;bottom:0;left:0;right:0;margin:auto;}";
+		videoWrapper.appendChild(cssStyle);
 	}
 
 	if (video.style.width == '') {
@@ -151,9 +132,6 @@ function fullScreenToggle(e) {
 				fireKeyEvent(document.querySelector('body'), 'keyup', 70);
 			}
 			break;
-		// case 2:
-			// document.querySelector(".squirtle-fullscreen-wrap").children[0].click();
-			// break;
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
@@ -180,37 +158,32 @@ function wideScreenToggel() {
 }
 
 function speedAdjust(upOrDown) {
-	switch (pageType) {
-		case 0:
-		case 1:
-		case 2:
-			var video = document.querySelector("video");
-			var step = document.querySelectorAll('.bpx-player-ctrl-playbackrate-menu')[0];
-			if (video == null) {
-				video = document.querySelector("bwp-video");
-			}
-			if (step == undefined) {
-				step = document.querySelectorAll('.squirtle-speed-select-list')[0];
-			}
-			step = step.children;
-			for (let i = 0; i < step.length; i++) {
-				if (-1 != step[i].getAttribute("class").search("active")) {
-					var infoText = step[i].innerHTML;
-					if ("down" == upOrDown && i < step.length - 1) {
-						step[i + 1].click();
-						infoText = step[i + 1].innerHTML;
-					} else if ("up" == upOrDown && i > 0) {
-						step[i - 1].click();
-						infoText = step[i - 1].innerHTML;
-					}
-					break;
-				}
-			}
-			showInfo(video.parentNode, infoText);
-			break;
-		case 3:
-			break;
+	if (pageType == 3) {
+		return;
 	}
+	var video = document.querySelector("video");
+	var step = document.querySelectorAll('.bpx-player-ctrl-playbackrate-menu')[0];
+	if (video == null) {
+		video = document.querySelector("bwp-video");
+	}
+	if (step == undefined) {
+		step = document.querySelectorAll('.squirtle-speed-select-list')[0];
+	}
+	step = step.children;
+	for (let i = 0; i < step.length; i++) {
+		if (-1 != step[i].getAttribute("class").search("active")) {
+			var infoText = step[i].innerHTML;
+			if ("down" == upOrDown && i < step.length - 1) {
+				step[i + 1].click();
+				infoText = step[i + 1].innerHTML;
+			} else if ("up" == upOrDown && i > 0) {
+				step[i - 1].click();
+				infoText = step[i - 1].innerHTML;
+			}
+			break;
+		}
+	}
+	showInfo(video.parentNode, infoText);
 }
 
 function restart(e) {
@@ -248,13 +221,6 @@ function restart(e) {
 				}
 			}
 			break;
-
-			// var electricPanel = document.querySelector(".bpx-player-electric-panel");
-			// var endingPanel = document.querySelector(".bpx-player-ending-panel");
-			// if (electricPanel != null && window.getComputedStyle(electricPanel).visibility != 'hidden' || endingPanel != null && window.getComputedStyle(endingPanel).visibility != 'hidden') {
-			// 	fireKeyEvent(document.querySelector('body'), 'keydown', 32);
-			// 	fireKeyEvent(document.querySelector('body'), 'keyup', 32);
-			// }
 		case 3:
 			var video = document.querySelector("video");
 			imitataMouseMove(video, 0, 0);
@@ -301,17 +267,17 @@ function liveVolumeAdjust(e, upOrDown) {
 			break;
 		case 3:
 			e.preventDefault();
+			var maxVol = 100;
+			var step = 10;
 			var video = document.querySelector("video");
-			var vol = Math.floor(video.volume * 10);
+			var vol = Math.floor(video.volume * maxVol);
 			if ("up" == upOrDown) {
-				vol += 1;
-				vol = Math.min(10, vol);
+				vol = Math.min(maxVol, vol + step);
 			} else if ("down" == upOrDown) {
-				vol -= 1;
-				vol = Math.max(0, vol);
+				vol = Math.max(0, vol - step);
 			}
-			video.volume = vol / 10;
-			showInfo(video.parentNode, "音量 " + (vol*10), 150);
+			video.volume = vol / maxVol;
+			showInfo(video.parentNode, "音量 " + vol, 150);
 
 			if (video.muted) {
 				liveMutedToggle(e)
@@ -356,6 +322,7 @@ function bestQualitySelect() {
 	imitateMouseClick('mouseenter', wrapElement, 0, 0)
 	setTimeout(() => document.querySelectorAll(".quality-wrap > .panel > .list-it")[0].click(), 100)
 }
+
 
 /* 鼠标按键事件模拟 */
 function imitateMouseClick(type, oElement, iClientX, iClientY) {
