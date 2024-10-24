@@ -106,12 +106,15 @@ function videoScale() {
 	videoWrapper.style.justifyContent = 'center';
 	videoWrapper.style.alignItems = 'center';
 
-	if (null == document.querySelector('#videoScaleStyle')) {
-		var cssStyle = document.createElement('style');
-		cssStyle.id = 'videoScaleStyle';
-		cssStyle.innerHTML = "video,canvas{top:0;bottom:0;left:0;right:0;margin:auto;}";
-		videoWrapper.appendChild(cssStyle);
+	if (document.querySelector('#videoScaleStyle') != null) {
+		document.querySelector('#videoScaleStyle').remove();
 	}
+	let cssStyle = document.createElement('style');
+	let liveToolBar = document.querySelector('#web-player__bottom-bar__container');
+	let toolBarHeight = liveToolBar == null ? 0 : liveToolBar.clientHeight;
+	cssStyle.id = 'videoScaleStyle';
+	cssStyle.innerHTML = `video,canvas{top:0;bottom:0;left:0;right:0;margin:auto;transform:translateY(${-toolBarHeight/2}px)}`;
+	videoWrapper.appendChild(cssStyle);
 
 	if (video.style.width == '') {
 		video.style.width = '100%';
@@ -119,7 +122,7 @@ function videoScale() {
 	var width = video.style.width.slice(0, -1) - 25;
 	width = (width + 75) % 100 + 25;
 	video.style.width = width + '%';
-	video.style.height = width + '%';
+	video.style.height = `calc(${width}% - ${toolBarHeight})`;
 }
 
 function fullScreenToggle(e) {
