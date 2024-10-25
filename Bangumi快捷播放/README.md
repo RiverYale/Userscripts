@@ -12,7 +12,7 @@
 3. 点击修改状态按钮后立即修改卡片状态  
   <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/epupdate.png" width="250">
 
-4. 点击资源链接后自动更新为“看过”，可关闭，默认状态可在代码中修改`autoMark`为`true`或`false`。  
+4. 点击资源链接后自动更新为“看过”，可关闭，默认状态可在代码中修改`autoMark`为`true`或`false`。点击“生成模板”可自动生成并复制资源列表模板代码  
   <img src="https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/automark.png" width="250">
 
 注：SP的剧集不在资源考虑范围内
@@ -86,6 +86,8 @@ _转载请注明出处_
 <br/>
 
 # 更新日志
+- v3.3
+  - 新增生成简易配置模板功能（自动标记按钮旁）
 - v3.2
   - 自动标记按钮旁新增功能加载进度文本
   - 修复点击“看到”后，错误更新到SP卡片的bug

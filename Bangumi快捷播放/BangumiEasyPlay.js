@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      3.2
+// @version      3.3
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -96,6 +96,25 @@ var handleTitle_B = function(title) {
 	$(preALink).attr('data-original-title', preALink_title.replace(text, data_original_title));
 }
 
+/* 生成配置模板 */
+var _ul = $('<ul style="display:inline-block; float:right;"></ul>');
+var _btn = $('<div style="padding: 3px 12px;margin: 8px 5px 0;;background: #F09199;color: white;border-radius: 50px;font-size: 11px;cursor: pointer;">生成模板</div>');
+$(_ul).append(_btn);
+$("#prgManagerHeader").append(_ul);
+$(_btn).click((e) => {
+	var resStr = "";
+	document.querySelectorAll('.subjectItem[data-subject-id]').forEach((i) => {
+		const id = i.getAttribute("data-subject-id");
+		const name = i.getAttribute("data-subject-name-cn");
+		resStr += `${id}: [0, 1, 0],			// ${name}\n`;
+	})
+	let allowCopy = confirm("将复制以下内容到剪切板：\n" + resStr);
+	if (allowCopy) {
+		navigator.clipboard.writeText(resStr);
+		console.log(resStr);
+		alert("请自行修改模板方括号内容。如果复制失败，请按F12打开控制台查看输出，手动复制。")
+	}
+})
 
 /* 点击链接后是否自动标记为[看过] */
 var _ul = $('<ul style="display:inline-block; float:right;"></ul>');
