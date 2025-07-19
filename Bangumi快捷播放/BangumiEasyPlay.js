@@ -3,7 +3,7 @@
 // @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      3.3
+// @version      3.4
 // @author       RiverYale
 // @match        *://bangumi.tv
 // @match        *://bgm.tv
@@ -93,6 +93,9 @@ var handleTitle_B = function(title) {
 
 	var preALink = $(title).prev().prev();
 	var preALink_title = $(preALink).attr('data-original-title');
+	if (!preALink_title) {
+		return true;
+	}
 	$(preALink).attr('data-original-title', preALink_title.replace(text, data_original_title));
 }
 
@@ -372,7 +375,11 @@ var executor = function(taskList) {
 	if (!taskList || taskList.length < 1) return;
 	var task = taskList.shift();
 	setTimeout(() => {
-		task.execute();
+		try {
+			task.execute();
+		} catch (error) {
+			console.error(error);
+		}
 		incProgress();
 		executor(taskList);
 	}, task.delay());
