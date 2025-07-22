@@ -3,11 +3,11 @@
 // @description  首页追番卡片显示中文标题，浮动卡片增加资源搜索，可添加对应集数播放源，浮动卡片状态实时改变无需刷新
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      3.4
+// @version      3.5
 // @author       RiverYale
-// @match        *://bangumi.tv
-// @match        *://bgm.tv
-// @match        *://chii.in
+// @match        *://bangumi.tv/
+// @match        *://bgm.tv/
+// @match        *://chii.in/
 // @icon         https://riveryale.github.io/Userscripts/assets/pic/BangumiEasyPlay/icon.png
 // @run-at       document-end
 // @compatible   chrome
