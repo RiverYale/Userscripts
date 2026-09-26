@@ -3,7 +3,7 @@
 // @description  个人动态页面中，淡化或者隐藏点赞过的动态
 // @namespace    https://github.com/RiverYale/Userscripts/
 // @homepage     https://riveryale.github.io/Userscripts/
-// @version      0.2
+// @version      0.3
 // @author       RiverYale
 // @match        *://t.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico?v=1
@@ -53,7 +53,7 @@ setTimeout(() => {
 
 		let anchor = getAnchor();
 		let clientOffsetTop = anchor ? anchor.getBoundingClientRect().top : 0;
-		let headerHeight = document.querySelector(".bili-header__bar.mini-header").scrollHeight + 8;
+		let headerHeight = document.querySelector(".bili-header__bar").scrollHeight + 8;
 		let anchorY = 0;
 
 		switch(status) {
